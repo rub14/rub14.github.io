@@ -37,7 +37,6 @@ import { supabaseClient } from "./utility";
 function App() {
   return (
     <BrowserRouter>
-      <GitHubBanner />
       <RefineKbarProvider>
         {/* You can change the theme colors here. example: theme={RefineThemes.Magenta} */}
         <ChakraProvider theme={RefineThemes.Blue}>
