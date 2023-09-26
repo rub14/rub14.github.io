@@ -21,17 +21,17 @@ import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import authProvider from "./authProvider";
 import { Header } from "./components/header";
 import {
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostList,
-  BlogPostShow,
-} from "./pages/blog-posts";
+  MovementCreate,
+  MovementEdit,
+  MovementList,
+  MovementShow,
+} from "./pages/movements";
 import {
-  CategoryCreate,
-  CategoryEdit,
-  CategoryList,
-  CategoryShow,
-} from "./pages/categories";
+  CompClassCreate,
+  CompClassEdit,
+  CompClassList,
+  CompClassShow,
+} from "./pages/comp_classes";
 import { supabaseClient } from "./utility";
 
 function App() {
@@ -49,21 +49,21 @@ function App() {
             notificationProvider={notificationProvider}
             resources={[
               {
-                name: "blog_posts",
-                list: "/blog-posts",
-                create: "/blog-posts/create",
-                edit: "/blog-posts/edit/:id",
-                show: "/blog-posts/show/:id",
+                name: "movements",
+                list: "/movements",
+                create: "/movements/create",
+                edit: "/movements/edit/:id",
+                show: "/movements/show/:id",
                 meta: {
                   canDelete: true,
                 },
               },
               {
-                name: "categories",
-                list: "/categories",
-                create: "/categories/create",
-                edit: "/categories/edit/:id",
-                show: "/categories/show/:id",
+                name: "comp_classes",
+                list: "/comp_classes",
+                create: "/comp_classes/create",
+                edit: "/comp_classes/edit/:id",
+                show: "/comp_classes/show/:id",
                 meta: {
                   canDelete: true,
                 },
@@ -72,7 +72,7 @@ function App() {
             options={{
               syncWithLocation: true,
               warnWhenUnsavedChanges: true,
-              projectId: "OCvWba-ATuwf8-GCyNF0",
+              projectId: "jjltjneewrfwbnveluwp",
             }}
           >
             <Routes>
@@ -87,19 +87,19 @@ function App() {
               >
                 <Route
                   index
-                  element={<NavigateToResource resource="blog_posts" />}
+                  element={<NavigateToResource resource="movements" />}
                 />
-                <Route path="/blog-posts">
-                  <Route index element={<BlogPostList />} />
-                  <Route path="create" element={<BlogPostCreate />} />
-                  <Route path="edit/:id" element={<BlogPostEdit />} />
-                  <Route path="show/:id" element={<BlogPostShow />} />
+                <Route path="/movements">
+                  <Route index element={<MovementList />} />
+                  <Route path="create" element={<MovementCreate />} />
+                  <Route path="edit/:id" element={<MovementEdit />} />
+                  <Route path="show/:id" element={<MovementShow />} />
                 </Route>
-                <Route path="/categories">
-                  <Route index element={<CategoryList />} />
-                  <Route path="create" element={<CategoryCreate />} />
-                  <Route path="edit/:id" element={<CategoryEdit />} />
-                  <Route path="show/:id" element={<CategoryShow />} />
+                <Route path="/comp_classes">
+                  <Route index element={<CompClassList />} />
+                  <Route path="create" element={<CompClassCreate />} />
+                  <Route path="edit/:id" element={<CompClassEdit />} />
+                  <Route path="show/:id" element={<CompClassShow />} />
                 </Route>
                 <Route path="*" element={<ErrorComponent />} />
               </Route>
@@ -117,8 +117,8 @@ function App() {
                       type="login"
                       formProps={{
                         defaultValues: {
-                          email: "info@refine.dev",
-                          password: "refine-supabase",
+                          email: "judging@virtualworkingequitation.com",
+                          password: "guestAcce$$",
                         },
                       }}
                     />
