@@ -32,7 +32,7 @@ import {
 } from "@chakra-ui/react";
 import { IconList, IconDashboard, IconPower } from "@tabler/icons";
 
-import { ThemedTitleV2 as DefaultTitle } from "../title";
+import { Title as DefaultTitle } from "../title";
 import { RefineThemedLayoutV2SiderProps } from "@refinedev/ui-types";
 import { useThemedLayoutContext } from "@refinedev/chakra-ui";
 
