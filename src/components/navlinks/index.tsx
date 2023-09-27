@@ -1,10 +1,9 @@
-import { Box, Heading, Flex, Text, Button, Link } from '@chakra-ui/react';
+import { Box, Heading, Flex, Spacer, Text, Button, Link } from '@chakra-ui/react';
 import React from "react";
 
 
-export const NavLinks: React.FC<{selectedDisplay:string}> = ({selectedDisplay}) => {
+export const NavLinks: React.FC<{selectedDisplay:string, show:boolean}> = ({selectedDisplay, show}) => {
 
-    const show = true;
     return (
         <Flex
             as="nav"
@@ -20,15 +19,20 @@ export const NavLinks: React.FC<{selectedDisplay:string}> = ({selectedDisplay}) 
                 align="center"
                 mr={{ md: "5" }}
                 width={{ base: "100%", md: "auto" }}
-                justifyContent={{ base: "space-between", md: "flex-start" }}
+                justifyContent={{ base: "flext-end", md: "flex-end" }}
                 >
-                <Heading as="h1" size="md" letterSpacing={"-.1rem"}>
-                    {selectedDisplay}
-                </Heading>
-
+                <Box
+                display={{ base: show ? "block" : "none", md: "block" }}
+                mt={{ base: 2, md: 0 }}
+                >
+                    <Heading as="h1" size="md" letterSpacing={"-.1rem"}>
+                        {selectedDisplay}
+                    </Heading>
+                </Box>
+                <Spacer />
                 <Box
                     display={{ base: show ? "block" : "none", md: "block" }}
-                    mt={{ base: 4, md: 0 }}
+                    mt={{ base: 2, md: 0 }}
                     >
                     <Button bg="transparent" border="1px">
                         Exit Judging

@@ -7,6 +7,7 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
     const [comp, setComp] = useState('');
     const [compId, setCompId] = useState(0);
     const [classType, setClassType] = useState('');
+    const [classTypeId, setClassTypeId] = useState(0);
   
     const { options: compOptions } = useSelect({
         resource: "competitions",
@@ -26,23 +27,46 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
           {
               field: "competition_id",
               operator: "eq",
-              value: compId,
+              value: compId
           },
       ]
     });
 
     const handleSelectComp = (e: React.ChangeEvent<HTMLSelectElement>) => {
-          const newValue = e.target.value;
+        const newValue = e.target.value;
+        
+        if (newValue != '')
           setCompId(parseInt(newValue));
-          const index = compOptions.findIndex((w) => w.value == newValue)
-          if (index != -1)
-            setComp(compOptions[index].label);
-          else
-            setComp('');
-        };
+        else
+          setCompId(0);
+
+        const compIndex = compOptions.findIndex((w) => w.value == newValue)
+        if (compIndex != -1)
+          setComp(compOptions[compIndex].label);
+        else
+          setComp('');
+
+      };
+
+      const handleOnClassTypeLoad = () => {
+
+        const classTypeIndex = classTypeOptions.findIndex((w) => w.value == classTypeId.toString())
+        console.log("classTypeIndex:",classTypeIndex);
+        if (classTypeIndex == -1)
+          {
+            setClassType('');
+            setClassTypeId(0);
+          }
+      };
 
     const handleSelectClass = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const newValue = e.target.value;
+
+      if (newValue != '')
+        setClassTypeId(parseInt(newValue));
+      else
+        setClassTypeId(0);
+
       const index = classTypeOptions.findIndex((w) => w.value == newValue)
       if (index != -1)
         setClassType(classTypeOptions[index].label);
@@ -52,7 +76,7 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
 
     return (
         <Box maxW="2xl" m="0 auto">
-        <NavLinks selectedDisplay={`${comp}: ${classType}`}/>
+        <NavLinks selectedDisplay={`${comp.length > 0 ? comp + ": " : ""} ${classType}`}/>
         <Heading as="h1" textAlign="center" fontSize="5xl" mt="100px">
           Online Scoring
         </Heading>
