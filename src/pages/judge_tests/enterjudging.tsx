@@ -4,20 +4,36 @@ import {useState} from 'react';
 import {NavLinks} from '../../components/navlinks';
 
 export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
+    const [comp, setComp] = useState('');
+    const [compId, setCompId] = useState(0);
+    const [classType, setClassType] = useState('');
+  
     const { options: compOptions } = useSelect({
         resource: "competitions",
-        optionLabel: "name"
+        optionLabel: "name",
+        sorters: [
+          {
+              field: "name",
+              order: "asc",
+          },
+      ],
     });
 
     const { options: classTypeOptions } = useSelect({
-      resource: "class_types",
-      optionLabel: "name"
+      resource: "classtypes_view",
+      optionLabel: "name",
+      filters: [
+          {
+              field: "competition_id",
+              operator: "eq",
+              value: compId,
+          },
+      ]
     });
 
-    const [comp, setComp] = useState('');
-    const [classType, setClassType] = useState('');
     const handleSelectComp = (e: React.ChangeEvent<HTMLSelectElement>) => {
           const newValue = e.target.value;
+          setCompId(parseInt(newValue));
           const index = compOptions.findIndex((w) => w.value == newValue)
           if (index != -1)
             setComp(compOptions[index].label);
@@ -44,7 +60,7 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
           Equestrian test scoring and judging
         </Text>
         <Select 
-          w="fit-content"
+          w="70%"
           m="0 auto"
           mt="8"
           placeholder='Select Competition'
@@ -57,7 +73,7 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
         </Select>
 
         <Select 
-          w="fit-content"
+          w="70%"
           m="0 auto"
           mt="8"
           placeholder='Select Class'
