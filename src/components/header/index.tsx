@@ -10,9 +10,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import {
-  HamburgerMenu,
   RefineThemedLayoutV2HeaderProps,
 } from "@refinedev/chakra-ui";
+import { Menu } from "../../components/menu";
 import { useGetIdentity } from "@refinedev/core";
 import { IconMoon, IconSun } from "@tabler/icons";
 import React from "react";
@@ -59,7 +59,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
       {...stickyProps}
     >
-      <HamburgerMenu />
+      <Menu />
 
       <HStack>
         <IconButton

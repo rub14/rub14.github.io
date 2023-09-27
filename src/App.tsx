@@ -20,6 +20,7 @@ import { dataProvider, liveProvider } from "@refinedev/supabase";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import authProvider from "./authProvider";
 import { Header } from "./components/header";
+import { Sider } from "./components/sider";
 import {
   MovementCreate,
   MovementEdit,
@@ -78,7 +79,7 @@ function App() {
               <Route
                 element={
                   <Authenticated fallback={<CatchAllNavigate to="/login" />}>
-                    <ThemedLayoutV2 Header={() => <Header sticky />}>
+                    <ThemedLayoutV2 Header={() => <Header sticky />} Sider={() => <Sider /> }>
                       <Outlet />
                     </ThemedLayoutV2>
                   </Authenticated>
