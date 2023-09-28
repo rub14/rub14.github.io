@@ -1,8 +1,13 @@
 import { Box, Heading, Flex, Spacer, Text, Button, Link } from '@chakra-ui/react';
 import React from "react";
 
+interface ISelectedDisplay {
+    competition: string,
+    classType: string,
+    classTest: string
+}
 
-export const NavLinks: React.FC<{selectedDisplay:string, show:boolean}> = ({selectedDisplay, show}) => {
+export const NavLinks: React.FC<{selectedDisplay:ISelectedDisplay, show:boolean}> = ({selectedDisplay, show}) => {
 
     return (
         <Flex
@@ -11,7 +16,7 @@ export const NavLinks: React.FC<{selectedDisplay:string, show:boolean}> = ({sele
             align="center"
             justify="space-between"
             wrap="wrap"
-            padding="1.5rem"
+            padding="1rem"
             bg="#8DC671"
             color="white"
         >
@@ -19,14 +24,26 @@ export const NavLinks: React.FC<{selectedDisplay:string, show:boolean}> = ({sele
                 align="center"
                 mr={{ md: "5" }}
                 width={{ base: "100%", md: "auto" }}
-                justifyContent={{ base: "flext-end", md: "flex-end" }}
+                justifyContent={{ base: "flex-end", md: "flex-end" }}
                 >
                 <Box
                 display={{ base: show ? "block" : "none", md: "block" }}
                 mt={{ base: 2, md: 0 }}
                 >
                     <Heading as="h1" size="md" letterSpacing={"-.1rem"}>
-                        {selectedDisplay}
+                        {selectedDisplay.competition}
+                    </Heading>
+                    <Heading as="h2" size="md" letterSpacing={"-.1rem"}>
+                        {selectedDisplay.classType}
+                    </Heading>
+                </Box>
+                <Spacer />
+                <Box
+                display={{ base: show ? "block" : "none", md: "block" }}
+                mt={{ base: 2, md: 0 }}
+                >
+                    <Heading as="h2" size="md" letterSpacing={"-.1rem"}>
+                        {selectedDisplay.classTest}
                     </Heading>
                 </Box>
                 <Spacer />
@@ -35,7 +52,7 @@ export const NavLinks: React.FC<{selectedDisplay:string, show:boolean}> = ({sele
                     mt={{ base: 2, md: 0 }}
                     >
                     <Button bg="transparent" border="1px">
-                        Exit Judging
+                        Exit
                     </Button>
                 </Box>
 

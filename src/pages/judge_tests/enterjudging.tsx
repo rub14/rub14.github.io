@@ -8,6 +8,9 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
     const [compId, setCompId] = useState(0);
     const [classType, setClassType] = useState('');
     const [classTypeId, setClassTypeId] = useState(0);
+    const [classTest, setClassTest] = useState('');
+    const [classTestId, setClassTestId] = useState(0);
+    const [showNav, setShowNav] = useState(true);
   
     const { options: compOptions } = useSelect({
         resource: "competitions",
@@ -29,6 +32,23 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
               operator: "eq",
               value: compId
           },
+      ]
+    });
+
+    const { options: classTestOptions } = useSelect({
+      resource: "compclasstests_view",
+      optionLabel: "phase_name",
+      filters: [
+          {
+              field: "competition_id",
+              operator: "eq",
+              value: compId
+          },
+          {
+            field: "class_type_id",
+            operator: "eq",
+            value: classTypeId
+        },
       ]
     });
 
@@ -74,9 +94,24 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
         setClassType('');
     };
 
+    const handleSelectClassTest = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const newValue = e.target.value;
+
+      if (newValue != '')
+        setClassTestId(parseInt(newValue));
+      else
+        setClassTestId(0);
+
+      const index = classTestOptions.findIndex((w) => w.value == newValue)
+      if (index != -1)
+        setClassTest(classTestOptions[index].label);
+      else
+        setClassTest('');
+    };
+
     return (
         <Box maxW="2xl" m="0 auto">
-        <NavLinks selectedDisplay={`${comp.length > 0 ? comp + ": " : ""} ${classType}`}/>
+        <NavLinks selectedDisplay={{competition: comp, classType: classType, classTest: classTest}} show={showNav}/>
         <Heading as="h1" textAlign="center" fontSize="5xl" mt="100px">
           Online Scoring
         </Heading>
@@ -108,6 +143,20 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
                       </option>
             ))}
         </Select>
+
+        <Select 
+          w="70%"
+          m="0 auto"
+          mt="8"
+          placeholder='Select Phase'
+          onChange={handleSelectClassTest}>
+            {classTestOptions?.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+            ))}
+        </Select>
+
         <Text
           w="fit-content"
           p="4"
