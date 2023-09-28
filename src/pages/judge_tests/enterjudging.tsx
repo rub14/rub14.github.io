@@ -2,161 +2,38 @@ import { useSelect, IResourceComponentsProps, useOne, Option } from "@refinedev/
 import { Heading, Text, Select, Box } from "@chakra-ui/react";
 import {useState} from 'react';
 import {NavLinks} from '../../components/navlinks';
+import { PickCompTest } from "../../components/pickcomptest";
+import {IJudgingSession} from "../../interfaces/props";
+
 
 export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
-    const [comp, setComp] = useState('');
-    const [compId, setCompId] = useState(0);
-    const [classType, setClassType] = useState('');
-    const [classTypeId, setClassTypeId] = useState(0);
-    const [classTest, setClassTest] = useState('');
-    const [classTestId, setClassTestId] = useState(0);
+    const [judgingSession, setJudgingSession] = useState({
+                                                  competitionId: 0,
+                                                  competitionName: '',
+                                                  classTypeId: 0,
+                                                  classTypeName: '',
+                                                  classTestId: 0,
+                                                  classPhaseName: ''
+                                                });
     const [showNav, setShowNav] = useState(true);
-  
-    const { options: compOptions } = useSelect({
-        resource: "competitions",
-        optionLabel: "name",
-        sorters: [
-          {
-              field: "name",
-              order: "asc",
-          },
-      ],
-    });
+    
+    const handleSetJudgingSession = (arg: IJudgingSession) => {
+      
+      setJudgingSession(arg);
 
-    const { options: classTypeOptions } = useSelect({
-      resource: "classtypes_view",
-      optionLabel: "name",
-      filters: [
-          {
-              field: "competition_id",
-              operator: "eq",
-              value: compId
-          },
-      ]
-    });
-
-    const { options: classTestOptions } = useSelect({
-      resource: "compclasstests_view",
-      optionLabel: "phase_name",
-      filters: [
-          {
-              field: "competition_id",
-              operator: "eq",
-              value: compId
-          },
-          {
-            field: "class_type_id",
-            operator: "eq",
-            value: classTypeId
-        },
-      ]
-    });
-
-    const handleSelectComp = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newValue = e.target.value;
-        
-        if (newValue != '')
-          setCompId(parseInt(newValue));
-        else
-          setCompId(0);
-
-        const compIndex = compOptions.findIndex((w) => w.value == newValue)
-        if (compIndex != -1)
-          setComp(compOptions[compIndex].label);
-        else
-          setComp('');
-
-      };
-
-      const handleOnClassTypeLoad = () => {
-
-        const classTypeIndex = classTypeOptions.findIndex((w) => w.value == classTypeId.toString())
-        console.log("classTypeIndex:",classTypeIndex);
-        if (classTypeIndex == -1)
-          {
-            setClassType('');
-            setClassTypeId(0);
-          }
-      };
-
-    const handleSelectClass = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const newValue = e.target.value;
-
-      if (newValue != '')
-        setClassTypeId(parseInt(newValue));
-      else
-        setClassTypeId(0);
-
-      const index = classTypeOptions.findIndex((w) => w.value == newValue)
-      if (index != -1)
-        setClassType(classTypeOptions[index].label);
-      else
-        setClassType('');
-    };
-
-    const handleSelectClassTest = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const newValue = e.target.value;
-
-      if (newValue != '')
-        setClassTestId(parseInt(newValue));
-      else
-        setClassTestId(0);
-
-      const index = classTestOptions.findIndex((w) => w.value == newValue)
-      if (index != -1)
-        setClassTest(classTestOptions[index].label);
-      else
-        setClassTest('');
     };
 
     return (
-        <Box maxW="2xl" m="0 auto">
-        <NavLinks selectedDisplay={{competition: comp, classType: classType, classTest: classTest}} show={showNav}/>
-        <Heading as="h1" textAlign="center" fontSize="5xl" mt="100px">
-          Online Scoring
-        </Heading>
-        <Text fontSize="xl" textAlign="center" mt="30px">
-          Equestrian test scoring and judging
-        </Text>
-        <Select 
-          w="70%"
-          m="0 auto"
-          mt="8"
-          placeholder='Select Competition'
-          onChange={handleSelectComp}>
-            {compOptions?.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-            ))}
-        </Select>
-
-        <Select 
-          w="70%"
-          m="0 auto"
-          mt="8"
-          placeholder='Select Class'
-          onChange={handleSelectClass}>
-            {classTypeOptions?.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-            ))}
-        </Select>
-
-        <Select 
-          w="70%"
-          m="0 auto"
-          mt="8"
-          placeholder='Select Phase'
-          onChange={handleSelectClassTest}>
-            {classTestOptions?.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-            ))}
-        </Select>
-
+      <Box maxW="2xl" m="0 auto">
+        <NavLinks selectedDisplay={
+                        {
+                          competition: judgingSession.competitionName, 
+                          classType: judgingSession.classTypeName, 
+                          classTest: judgingSession.classPhaseName
+                        }} 
+                         show={showNav}/>
+        
+        <PickCompTest setJudgingSession={handleSetJudgingSession} />
         <Text
           w="fit-content"
           p="4"
