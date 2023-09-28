@@ -1,5 +1,5 @@
 import { useSelect, IResourceComponentsProps, useOne, Option } from "@refinedev/core";
-import { Heading, Text, Select, Box } from "@chakra-ui/react";
+import { Heading, Text, Select, Box, Button, Stack, Spacer } from "@chakra-ui/react";
 import {useState} from 'react';
 import {NavLinks} from '../../components/navlinks';
 import { PickCompTest } from "../../components/pickcomptest";
@@ -15,7 +15,17 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
                                                   classTestId: 0,
                                                   classPhaseName: ''
                                                 });
-    const [showNav, setShowNav] = useState(true);
+    const [showNav, setShowNav] = useState(false);
+
+    const pickCompTest = () => {
+      return <PickCompTest setJudgingSession={handleSetJudgingSession} />
+    }
+
+    const [wizardSteps, setWizardSteps] = useState([
+      { key: 'pickCompTest', title: 'Online Scoring', isDone: true, component: pickCompTest }
+    ]);
+    const [activeStep, setActiveStep] = useState(wizardSteps[0]);
+    const steps = ['pickCompTest', 'pickRider', 'enterMovementScore', 'ViewTallyScore'];
     
     const handleSetJudgingSession = (arg: IJudgingSession) => {
       
@@ -23,6 +33,7 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
 
     };
 
+  
     return (
       <Box maxW="2xl" m="0 auto">
         <NavLinks selectedDisplay={
@@ -33,21 +44,44 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
                         }} 
                          show={showNav}/>
         
-        <PickCompTest setJudgingSession={handleSetJudgingSession} />
-        <Text
-          w="fit-content"
-          p="4"
-          px="50px"
-          bg="#8DC671"
-          borderRadius="10px"
-          m="0 auto"
-          mt="8"
-          fontWeight="bold"
-          color="white"
-          fontSize="xl"
+        {activeStep.component()}
+        
+        <Box
+          display='flex'
+          alignItems='center'
+          justifyContent='flex-end'
+          width='90%'
+          py={2}
+          mb={2}
         >
-          Start
-        </Text>
+          <Stack direction='row' spacing={4} align='center'>
+          <Button
+              p="8"
+              px="50px"
+              colorScheme='green'
+              borderRadius="10px"
+              mt="8"
+              fontWeight="bold"
+              color="white"
+              fontSize="xl"
+            >
+              Prev
+            </Button>
+            <Spacer />
+            <Button
+              p="8"
+              px="50px"
+              colorScheme='green'
+              borderRadius="10px"
+              mt="8"
+              fontWeight="bold"
+              color="white"
+              fontSize="xl"
+            >
+              Start
+            </Button>
+          </Stack>
+        </Box>
       </Box>
     );
 };

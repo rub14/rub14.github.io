@@ -65,12 +65,7 @@ export const PickCompTest: React.FC<IJudgingComponentProps> = ({setJudgingSessio
         else
           setComp('');
 
-        setJudgingSession({competitionId: compId,
-          competitionName: comp,
-          classTypeId: classTypeId,
-          classTypeName: classType,
-          classTestId: classTestId,
-          classPhaseName: classTest});
+        handleJudgingSessionCallback();
 
     };
 
@@ -88,12 +83,7 @@ export const PickCompTest: React.FC<IJudgingComponentProps> = ({setJudgingSessio
       else
         setClassType('');
 
-      setJudgingSession({competitionId: compId,
-        competitionName: comp,
-        classTypeId: classTypeId,
-        classTypeName: classType,
-        classTestId: classTestId,
-        classPhaseName: classTest});
+      handleJudgingSessionCallback();
       
     };
 
@@ -111,13 +101,18 @@ export const PickCompTest: React.FC<IJudgingComponentProps> = ({setJudgingSessio
       else
         setClassTest('');
 
-      setJudgingSession({competitionId: compId,
-                        competitionName: comp,
-                        classTypeId: classTypeId,
-                        classTypeName: classType,
-                        classTestId: classTestId,
-                        classPhaseName: classTest});
+      handleJudgingSessionCallback();
     };
+
+    const handleJudgingSessionCallback = () => {
+        setJudgingSession({competitionId: compId,
+        competitionName: comp,
+        classTypeId: classTypeId,
+        classTypeName: classType,
+        classTestId: classTestId,
+        classPhaseName: classTest});
+    };
+
     return (
         <>
             <Heading as="h1" textAlign="center" fontSize="5xl" mt="100px">
