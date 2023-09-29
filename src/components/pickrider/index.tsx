@@ -2,7 +2,6 @@
 import { useSelect, IResourceComponentsProps } from "@refinedev/core";
 import { Heading, Text, Select} from "@chakra-ui/react";
 import React from "react";
-import {useState} from 'react';
 import {IJudgingComponentProps} from "../../interfaces/props";
 import {NavLinks} from '../../components/navlinks';
 

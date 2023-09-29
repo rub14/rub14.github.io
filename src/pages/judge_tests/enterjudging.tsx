@@ -3,6 +3,7 @@ import { Heading, Text, Select, Box, Button, Stack, Spacer } from "@chakra-ui/re
 import {useState} from 'react';
 import { PickCompTest } from "../../components/pickcomptest";
 import { PickRider } from "../../components/pickrider";
+import { EnterScore } from "../../components/enterscore";
 import {IJudgingSession, IRider} from "../../interfaces/props";
 
 
@@ -31,12 +32,18 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
       return <PickRider judgingSession={activeJudgingSession} rider={activeRider} />
     };
 
+    const enterScore = () => {
+      return <EnterScore judgingSession={activeJudgingSession} rider={activeRider} />
+    };
+
     const [wizardSteps, setWizardSteps] = useState([
       { key: 'pickCompTest', title: 'Online Scoring', isDone: false, component: pickCompTest, showNav: false },
-      { key: 'pickRider', title: 'Rider List', isDone: false, component: pickRider, showNav: true }
+      { key: 'pickRider', title: 'Rider List', isDone: false, component: pickRider, showNav: true },
+      { key: 'enterScore', title: 'Movement Score', isDone: false, component: enterScore, showNav: true }
+  
     ]);
     const [activeStep, setActiveStep] = useState(wizardSteps[0]);
-    const steps = ['pickCompTest', 'pickRider', 'enterMovementScore', 'ViewTallyScore'];
+    const steps = ['pickCompTest', 'pickRider', 'enterScore', 'ViewTallyScore'];
 
     const handleNext = () => {
       if (wizardSteps[wizardSteps.length - 1].key === activeStep.key) {
