@@ -10,9 +10,19 @@ export interface IJudgingSession {
     classPhaseName: string
   };
 
+export interface IRider {
+  riderTestId: number,
+  riderDetails: string
+};
+
 export interface IJudgingComponentProps extends IResourceComponentsProps {
-    judgingSession?: IJudgingSession,
-    setJudgingSession: (arg:IJudgingSession) => void
-  };
+  judgingSession: IJudgingSession
+  rider?: IRider
+};
   
+interface IxJudgingComponentProps extends IResourceComponentsProps {
+  judgingSession?: IJudgingSession,
+  setJudgingSession: (arg: IJudgingSession) => void
+  setActiveRider: (arg: IRider) => void
+};
   

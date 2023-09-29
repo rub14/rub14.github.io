@@ -1,46 +1,71 @@
 import { useSelect, IResourceComponentsProps, useOne, Option } from "@refinedev/core";
 import { Heading, Text, Select, Box, Button, Stack, Spacer } from "@chakra-ui/react";
 import {useState} from 'react';
-import {NavLinks} from '../../components/navlinks';
 import { PickCompTest } from "../../components/pickcomptest";
-import {IJudgingSession} from "../../interfaces/props";
+import { PickRider } from "../../components/pickrider";
+import {IJudgingSession, IRider} from "../../interfaces/props";
 
 
 export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
-    const [judgingSession, setJudgingSession] = useState({
-                                                  competitionId: 0,
-                                                  competitionName: '',
-                                                  classTypeId: 0,
-                                                  classTypeName: '',
-                                                  classTestId: 0,
-                                                  classPhaseName: ''
-                                                });
+    const activeJudgingSession: IJudgingSession =
+      {
+        competitionId: 0,
+        competitionName: '',
+        classTypeId: 0,
+        classTypeName: '',
+        classTestId: 0,
+        classPhaseName: ''
+      };
+
+    const activeRider: IRider = 
+      {
+        riderTestId: 0,
+        riderDetails: ''
+      };                                         
 
     const pickCompTest = () => {
-      return <PickCompTest setJudgingSession={handleSetJudgingSession} />
-    }
+      return <PickCompTest judgingSession={activeJudgingSession} />
+    };
+
+    const pickRider = () => {
+      return <PickRider judgingSession={activeJudgingSession} rider={activeRider} />
+    };
 
     const [wizardSteps, setWizardSteps] = useState([
-      { key: 'pickCompTest', title: 'Online Scoring', isDone: true, component: pickCompTest, showNav: false }
+      { key: 'pickCompTest', title: 'Online Scoring', isDone: false, component: pickCompTest, showNav: false },
+      { key: 'pickRider', title: 'Rider List', isDone: false, component: pickRider, showNav: true }
     ]);
     const [activeStep, setActiveStep] = useState(wizardSteps[0]);
     const steps = ['pickCompTest', 'pickRider', 'enterMovementScore', 'ViewTallyScore'];
+
+    const handleNext = () => {
+      if (wizardSteps[wizardSteps.length - 1].key === activeStep.key) {
+        alert('You have completed all steps.');
+        return;
+      }
+
+      const index = wizardSteps.findIndex(x => x.key === activeStep.key);
+      setWizardSteps(prevStep => prevStep.map(x => {
+        if (x.key === activeStep.key) x.isDone = true;
+        return x;
+      }))
+      setActiveStep(wizardSteps[index + 1]);
+
+    }
+
+    const handleBack = () => {
+      const index = wizardSteps.findIndex(x => x.key === activeStep.key);
+      if (index === 0) return;
+     
+      setWizardSteps(prevStep => prevStep.map(x => {
+        if (x.key === activeStep.key) x.isDone = false;
+        return x;
+      }))
+      setActiveStep(wizardSteps[index - 1]);
+    }
     
-    const handleSetJudgingSession = (arg: IJudgingSession) => {
-      
-      setJudgingSession(arg);
-
-    };
-
     return (
       <Box maxW="2xl" m="0 auto">
-        <NavLinks selectedDisplay={
-                        {
-                          competition: judgingSession.competitionName, 
-                          classType: judgingSession.classTypeName, 
-                          classTest: judgingSession.classPhaseName
-                        }} 
-                         show={activeStep.showNav}/>
         
         {activeStep.component()}
         
@@ -62,6 +87,7 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
               fontWeight="bold"
               color="white"
               fontSize="xl"
+              onClick={handleBack}
             >
               Prev
             </Button>
@@ -75,8 +101,9 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
               fontWeight="bold"
               color="white"
               fontSize="xl"
+              onClick={handleNext}
             >
-              Start
+              {activeStep == wizardSteps[0] ? 'Start' : 'Next'}
             </Button>
           </Stack>
         </Box>
