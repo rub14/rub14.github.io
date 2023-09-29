@@ -17,7 +17,7 @@ export const NavLinks: React.FC<{selectedDisplay:ISelectedDisplay, show:boolean}
             justify="space-between"
             wrap="wrap"
             padding="1rem"
-            bg="#8DC671"
+            bg={{ base: show? "#8DC671" : "transparent"}}
             color="white"
         >
             <Flex

@@ -15,14 +15,13 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
                                                   classTestId: 0,
                                                   classPhaseName: ''
                                                 });
-    const [showNav, setShowNav] = useState(false);
 
     const pickCompTest = () => {
       return <PickCompTest setJudgingSession={handleSetJudgingSession} />
     }
 
     const [wizardSteps, setWizardSteps] = useState([
-      { key: 'pickCompTest', title: 'Online Scoring', isDone: true, component: pickCompTest }
+      { key: 'pickCompTest', title: 'Online Scoring', isDone: true, component: pickCompTest, showNav: false }
     ]);
     const [activeStep, setActiveStep] = useState(wizardSteps[0]);
     const steps = ['pickCompTest', 'pickRider', 'enterMovementScore', 'ViewTallyScore'];
@@ -33,7 +32,6 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
 
     };
 
-  
     return (
       <Box maxW="2xl" m="0 auto">
         <NavLinks selectedDisplay={
@@ -42,7 +40,7 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
                           classType: judgingSession.classTypeName, 
                           classTest: judgingSession.classPhaseName
                         }} 
-                         show={showNav}/>
+                         show={activeStep.showNav}/>
         
         {activeStep.component()}
         
