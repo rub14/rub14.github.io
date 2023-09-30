@@ -34,7 +34,7 @@ import {
   CompClassShow,
 } from "./pages/comp_classes";
 import { supabaseClient } from "./utility";
-import { EnterJudging } from "./pages/judge_tests";
+import { EnterJudging } from "./pages/movement_scores";
 import { IconPencil } from "@tabler/icons";
 
 function App() {
@@ -51,8 +51,8 @@ function App() {
             notificationProvider={notificationProvider}
             resources={[
               {
-                name: "judge_tests",
-                list: "judge_tests",
+                name: "movement_scores",
+                list: "movement_scores",
                 icon: <IconPencil />
               },
               {
@@ -94,9 +94,9 @@ function App() {
               >
                 <Route
                   index
-                  element={<NavigateToResource resource="judge_tests" />}
+                  element={<NavigateToResource resource="movement_scores" />}
                 />
-                 <Route path="/judge_tests">
+                 <Route path="/movement_scores">
                   <Route index element={<EnterJudging />} />
                 </Route>
                 <Route path="/movements">

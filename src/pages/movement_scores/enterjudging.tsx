@@ -71,6 +71,10 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
       setActiveStep(wizardSteps[index - 1]);
     }
     
+    const recordScore = () => {
+      //todo
+    }
+
     return (
       <Box maxW="2xl" m="0 auto">
         
@@ -95,6 +99,7 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
               color="white"
               fontSize="xl"
               onClick={handleBack}
+              display={activeStep.key != "enterScore" ? "inline-flex" : "none"}
             >
               Prev
             </Button>
@@ -109,8 +114,23 @@ export const EnterJudging: React.FC<IResourceComponentsProps> = () => {
               color="white"
               fontSize="xl"
               onClick={handleNext}
+              display={activeStep.key != "enterScore" ? "inline-flex" : "none"}
             >
               {activeStep == wizardSteps[0] ? 'Start' : 'Next'}
+            </Button>
+            <Button
+              p="8"
+              px="50px"
+              colorScheme='green'
+              borderRadius="10px"
+              mt="8"
+              fontWeight="bold"
+              color="white"
+              fontSize="xl"
+              onClick={recordScore}
+              display={activeStep.key == "enterScore" ? "inline-flex" : "none"}
+            >
+              Done
             </Button>
           </Stack>
         </Box>
