@@ -23,7 +23,7 @@ export const NavLinks: React.FC<{selectedDisplay:ISelectedDisplay, show:boolean}
             <Flex
                 align="center"
                 mr={{ md: "5" }}
-                width={{ base: "100%", md: "auto" }}
+                width="100%"
                 justifyContent={{ base: "flex-end", md: "flex-end" }}
                 >
                 <Box

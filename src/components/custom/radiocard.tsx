@@ -8,6 +8,9 @@ export function RadioCard(props: any) {
   
     const input = getInputProps()
     const checkbox = getRadioProps()
+
+    console.log('radio card input props', input)
+    console.log('radio card checkbox props', checkbox)
   
     return (
       <Box as='label'>
