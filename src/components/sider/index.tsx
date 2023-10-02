@@ -172,7 +172,7 @@ export const Sider: React.FC<RefineThemedLayoutV2SiderProps> = ({
                                         {(mobileSiderOpen ||
                                             !siderCollapsed) && (
                                             <Box flexGrow={1} textAlign="left">
-                                                {label}
+                                                XXX{label}
                                             </Box>
                                         )}
                                     </Button>

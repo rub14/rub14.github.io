@@ -3,9 +3,9 @@ import { useSelect, IResourceComponentsProps } from "@refinedev/core";
 import { Heading, Text, Select} from "@chakra-ui/react";
 import React from "react";
 import {IJudgingComponentProps} from "../../interfaces/props";
-import {NavLinks} from '../../components/navlinks';
+import {NavLinks} from '../navlinks';
 
-export const PickRider: React.FC<IJudgingComponentProps> = ({judgingSession, rider}) => {
+export const PickRiderX: React.FC<IJudgingComponentProps> = ({judgingSession, rider}) => {
     
     const { options: riderOptions } = useSelect({
       resource: "riderclasstests_view",

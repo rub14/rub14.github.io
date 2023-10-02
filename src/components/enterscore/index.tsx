@@ -1,6 +1,6 @@
 
 import { useSelect } from "@refinedev/core";
-import { Create } from "@refinedev/chakra-ui";
+import { Create, SaveButton } from "@refinedev/chakra-ui";
 import {
     Box,
     Spacer,
@@ -21,26 +21,14 @@ import {
     useToast
 } from "@chakra-ui/react";
 import { useForm } from "@refinedev/react-hook-form";
-import {IJudgingComponentProps} from "../../interfaces/props";
+import {IJudgingScoringComponentProps} from "../../interfaces/props";
 import {NavLinks} from '../../components/navlinks';
-import { useList, HttpError } from "@refinedev/core";
-import {useState, useEffect, useRef} from 'react';
+import {useState, useRef} from 'react';
 import {RadioCard} from "../custom/radiocard"
 
-interface IMovementList {
-    class_test_id: number;
-    movement_id: number;
-    item_num: number;
-    is_collective: boolean;
-    description: string;
-    directive: string;
-    coeffient: number;
-    max_value: number;
-    allowed_increments: number;
-    name: string;
-}
 
-export const EnterScore: React.FC<IJudgingComponentProps> = ({judgingSession, rider})=> {
+
+export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({judgingSession, rider, onScoreSaved, movement})=> {
     const {
         refineCore: { formLoading },
         saveButtonProps,
@@ -48,49 +36,13 @@ export const EnterScore: React.FC<IJudgingComponentProps> = ({judgingSession, ri
         formState: { errors },
     } = useForm();
 
-    const { data, isLoading, isError } = useList<IMovementList, HttpError>({
-        resource: "movementclasstests_view",
-        sorters: [
-            {
-                field: "item_num",
-                order: "asc",
-            },
-        ],
-        filters: [
-            {
-                field: "class_test_id",
-                operator: "eq",
-                value: judgingSession.classTestId
-            },
-        ],
-    });
+    const customButtonProps = {
+        ...saveButtonProps
+    };
+ 
+    const footerButtons = <></>;
 
-    const movements = data?.data ?? [];
-    let firstRecord;
-    if (movements.length > 0)
-        firstRecord = movements[0];
-    else
-        firstRecord = {
-                        movement_id: 0,
-                        item_num: 0,
-                        description: '',
-                        directive: '',
-                        is_collective: false,
-                        name: ''
-
-                    };
-
-    const [activeRecord, setActiveRecord] = useState(firstRecord);
-
-    const moveNext = () => {
-        
-        const index = movements.findIndex(x => x.movement_id === activeRecord.movement_id);
-        if (movements.length - 1 < index)
-            setActiveRecord(movements[index+1]);
-        else
-            alert('last movement record has been reached')
-        
-    }
+    console.log("movement", movement)
 
     const clearForm = () => {
         //reset form
@@ -118,20 +70,26 @@ export const EnterScore: React.FC<IJudgingComponentProps> = ({judgingSession, ri
 
     //   const group = getRootProps();
 
-      //todo - generate score values
-      //const score_values = [0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
-      const { options: scoreValueOptions } = useSelect({
-        resource: "score_values",
-        optionLabel: "description",
-        optionValue: "score",
-        sorters: [
-            {
-                field: "score",
-                order: "asc",
-            },
-        ],
-        });
+    //todo - generate score values
+    //const score_values = [0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
+    const { options: scoreValueOptions } = useSelect({
+    resource: "score_values",
+    optionLabel: "description",
+    optionValue: "score",
+    sorters: [
+        {
+            field: "score",
+            order: "asc",
+        },
+    ],
+    });
 
+    const recordScore = () => {
+        saveButtonProps.onClick();
+        if (!errors.any)
+            onScoreSaved();
+    }
+        
     return (
         <>
             <NavLinks selectedDisplay={
@@ -142,7 +100,9 @@ export const EnterScore: React.FC<IJudgingComponentProps> = ({judgingSession, ri
                 }} 
                 show={true} />
 
-            <Create title={activeRecord.is_collective ? "Enter Collective" : "Enter Score"} isLoading={formLoading} saveButtonProps={saveButtonProps}>
+            <Create title={movement.is_collective ? "Enter Collective" : "Enter Score"} 
+                            isLoading={formLoading} saveButtonProps={saveButtonProps} 
+                            footerButtons={footerButtons} footerButtonProps={{}}>
                 <Flex
                     
                     align="center"
@@ -153,18 +113,18 @@ export const EnterScore: React.FC<IJudgingComponentProps> = ({judgingSession, ri
                     justifyContent={{ base: "center", md: "center" }}
                 >
                     <Box display="block" border="1px" padding="1rem" height="100%" width="100%">
-                        <h2>Movement #: {activeRecord?.item_num} of {movements.length}</h2>
+                        <h2>Movement #: {movement?.item_num} of {movement.total_movements}</h2>
                         <Text>
-                            {activeRecord?.description}    
+                            {movement?.description}    
                         </Text>
                     </Box>
                     <Spacer />
                     <Box display="block" border="1px" padding="1rem" height="100%" width="100%">
                         <Text display="none">
-                            Class Test: {activeRecord?.name}
+                            Class Test: {movement?.name}
                         </Text>
                         <Text>
-                            {activeRecord?.directive}
+                            {movement?.directive}
                         </Text>
                     </Box>
                 </Flex>
@@ -216,14 +176,26 @@ export const EnterScore: React.FC<IJudgingComponentProps> = ({judgingSession, ri
                     <Input
                         type="number"
                         display={"none"}
-                        defaultValue={activeRecord?.movement_id}
+                        defaultValue={movement?.movement_id}
                         {...register("movement_id", {
                             required: "This field is required",
                             valueAsNumber: true,
                         })}
                     />
                 </FormControl>
+               
             </Create>
+            <SaveButton {...saveButtonProps}
+                 p="8"
+                 px="50px"
+                 colorScheme='green'
+                 borderRadius="10px"
+                 mt="8"
+                 fontWeight="bold"
+                 color="white"
+                 fontSize="xl"
+                 onClick={recordScore}
+            >Next</SaveButton>
         </>
     );
 };
