@@ -7,10 +7,12 @@ import { PickRider } from "./pickrider";
 import { ScoreTest } from "./scoretest";
 import {IJudgingSession, IRider, IMovementList} from "../../interfaces/props";
 import { useList, HttpError } from "@refinedev/core";
-
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 
 export const Judging: React.FC<IResourceComponentsProps> = () => {
+    useDocumentTitle("Judging | Scoring");
+
     const activeJudgingSession: IJudgingSession =
       {
         competitionId: 0,
