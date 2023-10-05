@@ -1,4 +1,4 @@
-import { Authenticated, GitHubBanner, Refine } from "@refinedev/core";
+import { Authenticated, Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import {
@@ -20,7 +20,7 @@ import { dataProvider, liveProvider } from "@refinedev/supabase";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import authProvider from "./authProvider";
 import { Header } from "./components/header";
-import { Sider } from "./components/sider";
+//import { Sider } from "./components/sider";
 import {
   MovementCreate,
   MovementEdit,
@@ -36,6 +36,7 @@ import {
 import { supabaseClient } from "./utility";
 import { Judging, PickRider, MovementScoreCreate } from "./pages/movement_scores";
 import { IconPencil } from "@tabler/icons";
+import { Title } from "./components/title";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
         {/* You can change the theme colors here. example: theme={RefineThemes.Magenta} */}
         <ChakraProvider theme={RefineThemes.Blue}>
           <Refine
+            
             dataProvider={dataProvider(supabaseClient)}
             liveProvider={liveProvider(supabaseClient)}
             authProvider={authProvider}
@@ -87,7 +89,7 @@ function App() {
               <Route
                 element={
                   <Authenticated fallback={<CatchAllNavigate to="/login" />}>
-                    <ThemedLayoutV2 Header={() => <Header sticky />} Sider={() => <Sider /> }>
+                    <ThemedLayoutV2 Header={() => <Header sticky/>} Title={Title}>
                       <Outlet />
                     </ThemedLayoutV2>
                   </Authenticated>

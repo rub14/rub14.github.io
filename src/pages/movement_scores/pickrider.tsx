@@ -4,9 +4,10 @@ import React from "react";
 import {useState} from "react";
 import {NavLinks} from '../../components/navlinks';
 import { useParams } from "react-router-dom";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 export const PickRider: React.FC<IResourceComponentsProps> = () => {
-    
+    useDocumentTitle("Pick Rider | Scoring");
     const { id } = useParams();
     const [activeRider, setActiveRider] = useState(0);
     const { options: riderOptions } = useSelect({

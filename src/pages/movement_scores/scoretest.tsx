@@ -4,11 +4,12 @@ import {useState} from 'react';
 import { EnterScore } from "../../components/enterscore";
 import {IJudgingScoringComponentProps, IMovementList} from "../../interfaces/props";
 import { useList, HttpError } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 
 
 export const ScoreTest: React.FC<IJudgingScoringComponentProps> = ({judgingSession, rider}) => {                                     
-
+    useDocumentTitle("Score Test | Scoring");
     /*const [movements, setMovements] = useState([{
                                                 class_test_id: 0,
                                                 movement_id: 0,
