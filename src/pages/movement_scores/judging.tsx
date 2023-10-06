@@ -15,11 +15,11 @@ export const Judging: React.FC<IResourceComponentsProps> = () => {
 
     const activeJudgingSession: IJudgingSession =
       {
-        competitionId: 0,
+        competitionId: '0',
         competitionName: '',
-        classTypeId: 0,
+        classTypeId: '0',
         classTypeName: '',
-        classTestId: 0,
+        classTestId: '0',
         classPhaseName: ''
       };
 
@@ -87,8 +87,8 @@ export const Judging: React.FC<IResourceComponentsProps> = () => {
     return (
       <Box maxW="2xl" m="0 auto">
         
-        <PickCompTest judgingSession={activeJudgingSession} />
-        
+        <PickCompTest />
+                          
         <Box
           display='flex'
           alignItems='center'

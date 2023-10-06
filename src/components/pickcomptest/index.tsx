@@ -9,7 +9,8 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
     const [compId, setCompId] = useState(0);
     const [classType, setClassType] = useState('');
     const [classTypeId, setClassTypeId] = useState(0);
-    
+    const [classTestId, setClassTestId] = useState(0);
+
     const { options: compOptions } = useSelect({
       resource: "competitions",
       optionLabel: "name",
@@ -58,6 +59,22 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
       ]
     });
 
+    useEffect(() => {
+      const lastComp = localStorage.getItem("compId");
+      const lastClass = localStorage.getItem("classTypeId");
+      const lastClassTest = localStorage.getItem("classTestId");
+
+      if (lastComp && lastClass && lastClassTest)
+      {
+        setCompId(parseInt(lastComp));
+        setClassTypeId(parseInt(lastClass));
+        setClassTestId(parseInt(lastClassTest));
+      }
+      //else
+       // console.log('default comp not found');
+    }, []);
+    
+
     const handleSelectComp = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newValue = e.target.value;
         
@@ -68,6 +85,7 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
           {
             setCompId(parseInt(newValue));
             setComp(compOptions[compIndex].label);
+            clearActiveClassType();
           }
           else
             clearActiveComp();
@@ -87,6 +105,7 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
         {
           setClassTypeId(parseInt(newValue));
           setClassType(classTypeOptions[index].label);
+          clearActiveClassTest();
         }
         else
           clearActiveClassType();
@@ -104,40 +123,50 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
       {
         const index = classTestOptions.findIndex((w) => w.value == newValue)
         if (index != -1)
+        {
+          setClassTestId(parseInt(newValue));
           setActiveJudgingSession(parseInt(newValue),classTestOptions[index].label);
+        }
         else
-          setActiveJudgingSession(0,'');
+          clearActiveClassTest();
         
       }
       else
-        setActiveJudgingSession(0, '');
+        clearActiveClassTest();
       
     };
 
     const setActiveJudgingSession = (classTestId: number, classTest: string) => {
-      localStorage.compId = compId;
-      localStorage.comp = comp;
+      localStorage.setItem("compId", compId.toString());
+      localStorage.setItem("comp", comp);
       localStorage.setItem("classTypeId", classTypeId.toString());
-      localStorage.setItem("classType", classType.toString());
+      localStorage.setItem("classType", classType);
       localStorage.setItem("classTestId", classTestId.toString());
-      localStorage.setItem("classTest", classTest.toString());
+      localStorage.setItem("classTest", classTest);
     };
 
+    const clearActiveClassTest = () => {
+      setClassTestId(0);
+      //localStorage.setItem("classTestId", '');
+      //localStorage.setItem("classTest", '');
+    }
+
     const clearActiveClassType = () => {
+      clearActiveClassTest();
       setClassTypeId(0);
       setClassType('');
-      localStorage.setItem("classTypeId", '');
-      localStorage.setItem("classType", '');
-      localStorage.setItem("classTestId", '');
-      localStorage.setItem("classTest", '');
+      //localStorage.setItem("classTypeId", '');
+      //localStorage.setItem("classType", '');
+      
     }
 
     const clearActiveComp = () => {
+      clearActiveClassType();
       setCompId(0);
       setComp('');
-      localStorage.setItem("compId", '');
-      localStorage.setItem("comp", '');
-      clearActiveClassType();
+     //localStorage.setItem("compId", '');
+      //localStorage.setItem("comp", '');
+      
     }
 
     return (
@@ -153,6 +182,7 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
                 m="0 auto"
                 mt="8"
                 placeholder='Select Competition'
+                value={compId}
                 onChange={handleSelectComp}>
                 {compOptions?.map(option => (
                             <option key={option.value} value={option.value}>
@@ -166,6 +196,7 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
                 m="0 auto"
                 mt="8"
                 placeholder='Select Class'
+                value={classTypeId}
                 onChange={handleSelectClass}>
                 {classTypeOptions?.map(option => (
                             <option key={option.value} value={option.value}>
@@ -179,6 +210,7 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
                 m="0 auto"
                 mt="8"
                 placeholder='Select Phase'
+                value={classTestId}
                 onChange={handleSelectClassTest}>
                 {classTestOptions?.map(option => (
                             <option key={option.value} value={option.value}>

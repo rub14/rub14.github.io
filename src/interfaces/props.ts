@@ -2,11 +2,11 @@
 import { IResourceComponentsProps } from "@refinedev/core";
 
 export interface IJudgingSession {
-    competitionId: number,
+    competitionId: string,
     competitionName: string,
-    classTypeId: number,
+    classTypeId: string,
     classTypeName: string,
-    classTestId: number
+    classTestId: string
     classPhaseName: string
   };
 
