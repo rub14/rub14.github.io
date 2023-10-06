@@ -4,7 +4,7 @@ import React from "react";
 import {useState, useEffect} from 'react';
 import {IJudgingComponentProps} from "../../interfaces/props";
 
-export const PickCompTest: React.FC<IJudgingComponentProps> = ({judgingSession}) => {
+export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
     const [comp, setComp] = useState('');
     const [compId, setCompId] = useState(0);
     const [classType, setClassType] = useState('');
@@ -115,32 +115,29 @@ export const PickCompTest: React.FC<IJudgingComponentProps> = ({judgingSession})
     };
 
     const setActiveJudgingSession = (classTestId: number, classTest: string) => {
-      judgingSession.competitionId = compId;
-      judgingSession.competitionName = comp;
-      judgingSession.classTypeId = classTypeId;
-      judgingSession.classTypeName = classType;
-      judgingSession.classTestId = classTestId;
-      judgingSession.classPhaseName = classTest;
+      localStorage.compId = compId;
+      localStorage.comp = comp;
+      localStorage.setItem("classTypeId", classTypeId.toString());
+      localStorage.setItem("classType", classType.toString());
+      localStorage.setItem("classTestId", classTestId.toString());
+      localStorage.setItem("classTest", classTest.toString());
     };
 
     const clearActiveClassType = () => {
       setClassTypeId(0);
       setClassType('');
-      judgingSession.classTypeId = 0;
-      judgingSession.classTypeName = '';
-      judgingSession.classTestId = 0;
-      judgingSession.classPhaseName = '';
+      localStorage.setItem("classTypeId", '');
+      localStorage.setItem("classType", '');
+      localStorage.setItem("classTestId", '');
+      localStorage.setItem("classTest", '');
     }
 
     const clearActiveComp = () => {
       setCompId(0);
       setComp('');
-      judgingSession.competitionId = 0;
-      judgingSession.competitionName = '';
-      judgingSession.classTypeId = 0;
-      judgingSession.classTypeName = '';
-      judgingSession.classTestId = 0;
-      judgingSession.classPhaseName = '';
+      localStorage.setItem("compId", '');
+      localStorage.setItem("comp", '');
+      clearActiveClassType();
     }
 
     return (
