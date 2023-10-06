@@ -38,7 +38,7 @@ export const Judging: React.FC<IResourceComponentsProps> = () => {
 
     const pickRider = () => {
       //return <PickRider judgingSession={activeJudgingSession} rider={activeRider} />
-      navigate(`pickrider/${activeJudgingSession.classTestId}`)
+      navigate(`pickrider/${localStorage.getItem("classTestId")}`)
     };
 
     const scoreTest = () => {

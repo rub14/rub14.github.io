@@ -10,6 +10,17 @@ export interface IJudgingSession {
     classPhaseName: string
   };
 
+export interface IClassTestView {
+    phase_num: number,
+    phase_name: string,
+    competition_id: number,
+    class_type_id: number,
+    id: number,
+    name: string,
+    class_types_name: string,
+    competition_name: string
+  };
+
 export interface IMovementList {
     class_test_id: number;
     movement_id: number;
