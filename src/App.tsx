@@ -52,7 +52,7 @@ import {
   RiderTestShow,
 } from "./pages/rider_tests";
 import { supabaseClient } from "./utility";
-import { Judging, PickRider, MovementScoreCreate } from "./pages/movement_scores";
+import { Judging, PickRider, ScoreTest, MovementScoreCreate } from "./pages/judging";
 import { IconPencil } from "@tabler/icons";
 import { Title } from "./components/title";
 
@@ -150,6 +150,7 @@ function App() {
                 <Route path="/judging">
                   <Route index element={<Judging />} />
                   <Route path="pickrider/:id" element={<PickRider/>} />
+                  <Route path="scoretest/:id" element={<ScoreTest/>} />
                   <Route path="create" element={<MovementScoreCreate />} />
                 </Route>
                 <Route path="/tests">

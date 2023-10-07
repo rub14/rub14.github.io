@@ -1,12 +1,18 @@
 import { useSelect, IResourceComponentsProps } from "@refinedev/core";
-import { Heading, Text, Select} from "@chakra-ui/react";
-import React from "react";
+import { Box, Button, Stack, Heading, Text, Select } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import {useState, useEffect} from 'react';
-import {IJudgingComponentProps} from "../../interfaces/props";
+import { PickCompTest } from "../../components/pickcomptest";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
-export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
+
+export const Judging: React.FC<IResourceComponentsProps> = () => {
+    useDocumentTitle("Judging | Scoring");
+
     const [compId, setCompId] = useState(0);
+    const [comp, setComp] = useState('');
     const [classTypeId, setClassTypeId] = useState(0);
+    const [classType, setClassType] = useState('');
     const [classTestId, setClassTestId] = useState(0);
 
     const { options: compOptions } = useSelect({
@@ -74,100 +80,111 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
     
 
     const handleSelectComp = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newValue = e.target.value;
-        
-        if (newValue != '')
+      const newValue = e.target.value;
+      
+      if (newValue != '')
+      {
+        const compIndex = compOptions.findIndex((w) => w.value == newValue)
+        if (compIndex != -1)
         {
-          const compIndex = compOptions.findIndex((w) => w.value == newValue)
-          if (compIndex != -1)
-          {
-            setCompId(parseInt(newValue));
-            localStorage.setItem("compId", compId.toString());
-            localStorage.setItem("comp", compOptions[compIndex].label);
-            clearActiveClassType();
-          }
-          else
-            clearActiveComp();
-        }  
+          setCompId(parseInt(newValue));
+          setComp(compOptions[compIndex].label);
+          clearActiveClassType();
+        }
         else
           clearActiveComp();
+      }  
+      else
+        clearActiveComp();
 
-    };
+  };
 
-    const handleSelectClass = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const newValue = e.target.value;
+  const handleSelectClass = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = e.target.value;
 
-      if (newValue != '')
+    if (newValue != '')
+    {
+      const index = classTypeOptions.findIndex((w) => w.value == newValue)
+      if (index != -1)
       {
-        const index = classTypeOptions.findIndex((w) => w.value == newValue)
-        if (index != -1)
-        {
-          setClassTypeId(parseInt(newValue));
-          localStorage.setItem("classTypeId", classTypeId.toString());
-          localStorage.setItem("classType", classTypeOptions[index].label);
-          clearActiveClassTest();
-        }
-        else
-          clearActiveClassType();
-
-      } 
+        setClassTypeId(parseInt(newValue));
+        setClassType(classTypeOptions[index].label);
+        clearActiveClassTest();
+      }
       else
         clearActiveClassType();
- 
-    };
 
-    const handleSelectClassTest = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const newValue = e.target.value;
+    } 
+    else
+      clearActiveClassType();
 
-      if (newValue != '')
+  };
+
+  const handleSelectClassTest = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = e.target.value;
+
+    if (newValue != '')
+    {
+      const index = classTestOptions.findIndex((w) => w.value == newValue)
+      if (index != -1)
       {
-        const index = classTestOptions.findIndex((w) => w.value == newValue)
-        if (index != -1)
-        {
-          setClassTestId(parseInt(newValue));
-          localStorage.setItem("classTestId", classTestId.toString());
-          localStorage.setItem("classTest", classTestOptions[index].label);
-        }
-        else
-          clearActiveClassTest();
-        
+        setClassTestId(parseInt(newValue));
+        setActiveJudgingSession(parseInt(newValue),classTestOptions[index].label);
       }
       else
         clearActiveClassTest();
       
-    };
-
-    const setActiveJudgingSession = (classTestId: number, classTest: string) => {
-      
-      
-      
-    };
-
-    const clearActiveClassTest = () => {
-      setClassTestId(0);
-      localStorage.setItem("classTestId", '');
-      localStorage.setItem("classTest", '');
     }
-
-    const clearActiveClassType = () => {
+    else
       clearActiveClassTest();
-      setClassTypeId(0);
-      localStorage.setItem("classTypeId", '');
-      localStorage.setItem("classType", '');
-      
-    }
+    
+  };
 
-    const clearActiveComp = () => {
-      clearActiveClassType();
-      setCompId(0);
-      localStorage.setItem("compId", '');
-      localStorage.setItem("comp", '');
-      
-    }
+  const setActiveJudgingSession = (classTestId: number, classTest: string) => {
+    localStorage.setItem("compId", compId.toString());
+    localStorage.setItem("comp", comp);
+    localStorage.setItem("classTypeId", classTypeId.toString());
+    localStorage.setItem("classType", classType);
+    localStorage.setItem("classTestId", classTestId.toString());
+    localStorage.setItem("classTest", classTest);
+  };
 
+  const clearActiveClassTest = () => {
+    setClassTestId(0);
+    //localStorage.setItem("classTestId", '');
+    //localStorage.setItem("classTest", '');
+  }
+
+  const clearActiveClassType = () => {
+    clearActiveClassTest();
+    setClassTypeId(0);
+    setClassType('');
+    //localStorage.setItem("classTypeId", '');
+    //localStorage.setItem("classType", '');
+    
+  }
+
+  const clearActiveComp = () => {
+    clearActiveClassType();
+    setCompId(0);
+    setComp('');
+   //localStorage.setItem("compId", '');
+    //localStorage.setItem("comp", '');
+    
+  }
+
+
+    const navigate = useNavigate();
+
+    const handleNext = () => {
+      navigate(`pickrider/${classTestId}`)
+
+    }
+    
     return (
-        <>
-            <Heading as="h1" textAlign="center" fontSize="5xl" mt="100px">
+      <Box maxW="2xl" m="0 auto">
+        
+        <Heading as="h1" textAlign="center" fontSize="5xl" mt="100px">
                 Online Scoring
             </Heading>
             <Text fontSize="xl" textAlign="center" mt="30px">
@@ -214,6 +231,33 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
                             </option>
                 ))}
             </Select>
-        </>
-        );
-    };
+                          
+        <Box
+          width='90%'
+          m="0 auto"
+          display="flex"
+          justifyContent="flex-end"
+          py={2}
+          mb={2}
+        >
+          <Stack direction='row' spacing={4} align='center'>
+          
+            <Button
+              p="8"
+              px="50px"
+              colorScheme='green'
+              borderRadius="10px"
+              mt="8"
+              fontWeight="bold"
+              color="white"
+              fontSize="xl"
+              onClick={handleNext}
+            >
+              Start
+            </Button>
+           
+          </Stack>
+        </Box>
+      </Box>
+    );
+};

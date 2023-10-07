@@ -46,8 +46,9 @@ export interface IJudgingComponentProps extends IResourceComponentsProps {
   rider?: IRider
 };
   
-export interface IJudgingScoringComponentProps extends IJudgingComponentProps {
+export interface IJudgingScoringComponentProps extends IResourceComponentsProps {
   movement: IMovementList
+  rider: IRider
   onScoreSaved: () => void
 };
 

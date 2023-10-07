@@ -8,7 +8,7 @@ interface ISelectedDisplay {
 }
 
 export const NavLinks: React.FC<{selectedDisplay:ISelectedDisplay, show:boolean}> = ({selectedDisplay, show}) => {
-
+    
     return (
         <Flex
             as="nav"

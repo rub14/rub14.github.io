@@ -1,9 +1,10 @@
 
 import { useSelect } from "@refinedev/core";
-import { Create, SaveButton } from "@refinedev/chakra-ui";
+import { Create, SaveButton} from "@refinedev/chakra-ui";
 import {
     Box,
     Spacer,
+    Button,
     Text,
     FormControl,
     FormLabel,
@@ -26,9 +27,7 @@ import {NavLinks} from '../../components/navlinks';
 import {useState, useRef} from 'react';
 import {RadioCard} from "../custom/radiocard"
 
-
-
-export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({judgingSession, rider, onScoreSaved, movement})=> {
+export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSaved, rider, movement})=> {
     const {
         refineCore: { formLoading },
         saveButtonProps,
@@ -89,18 +88,17 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({judgingSess
         if (!errors.any)
             onScoreSaved();
     }
+
+    const goBack = () => {
+  
+    }
         
     return (
         <>
-            <NavLinks selectedDisplay={
-                {
-                competition: judgingSession.competitionName, 
-                classType: judgingSession.classTypeName, 
-                classTest: judgingSession.classPhaseName
-                }} 
-                show={true} />
 
-            <Create title={movement.is_collective ? "Enter Collective" : "Enter Score"} 
+            <Create title={movement.is_collective 
+                                    ? `Enter Collective for ${rider.riderDetails}` 
+                                     : `Enter Score for ${rider.riderDetails}` } 
                             isLoading={formLoading} saveButtonProps={saveButtonProps} 
                             footerButtons={footerButtons} footerButtonProps={{}}>
                 <Flex
@@ -185,17 +183,41 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({judgingSess
                 </FormControl>
                
             </Create>
-            <SaveButton {...saveButtonProps}
-                 p="8"
-                 px="50px"
-                 colorScheme='green'
-                 borderRadius="10px"
-                 mt="8"
-                 fontWeight="bold"
-                 color="white"
-                 fontSize="xl"
-                 onClick={recordScore}
-            >Next</SaveButton>
+             
+            <Box
+              width='90%'
+              m="0 auto"
+              py={2}
+              mb={2}
+            >
+                <Stack direction='row' spacing={4} align='center'>          
+                    <Button
+                        p="8"
+                        px="50px"
+                        colorScheme='green'
+                        borderRadius="10px"
+                        mt="8"
+                        fontWeight="bold"
+                        color="white"
+                        fontSize="xl"
+                        onClick={goBack}
+                        >
+                        Go Back
+                    </Button>
+                    <Spacer />
+                    <SaveButton {...saveButtonProps}
+                        p="8"
+                        px="50px"
+                        colorScheme='green'
+                        borderRadius="10px"
+                        mt="8"
+                        fontWeight="bold"
+                        color="white"
+                        fontSize="xl"
+                        onClick={recordScore}
+                    >Next</SaveButton>
+                </Stack>
+            </Box>
         </>
     );
 };
