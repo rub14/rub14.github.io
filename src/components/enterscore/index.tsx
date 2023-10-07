@@ -96,7 +96,7 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
     return (
         <>
 
-            <Create title={movement.is_collective 
+            <Create title={movement?.is_collective 
                                     ? `Enter Collective for ${rider.riderDetails}` 
                                      : `Enter Score for ${rider.riderDetails}` } 
                             isLoading={formLoading} saveButtonProps={saveButtonProps} 
@@ -111,7 +111,7 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
                     justifyContent={{ base: "center", md: "center" }}
                 >
                     <Box display="block" border="1px" padding="1rem" height="100%" width="100%">
-                        <h2>Movement #: {movement?.item_num} of {movement.total_movements}</h2>
+                        <h2>Movement #: {movement?.item_num} of {movement?.total_movements}</h2>
                         <Text>
                             {movement?.description}    
                         </Text>

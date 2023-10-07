@@ -17,6 +17,22 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     const [activeClassType, setActiveClassType] = useState('');
     const [activeClassTest, setActiveClassTest] = useState('');
     const [activeRiderTestId, setActiveRiderTestId] = useState(0);
+    const [activeRecord, setActiveRecord] = useState(0);
+
+    const dummyRecord = {
+                class_test_id: 0,
+                movement_id: 0,
+                item_num: 0,
+                is_collective: false,
+                description: '',
+                directive: '',
+                coeffient: 0,
+                max_value: 0,
+                allowed_increments: 0,
+                name: '',
+                score_range_id: 0,
+                total_movements: 0
+                }
 
     useEffect(() => {
       setActiveComp(localStorage.getItem("comp") ?? '');
@@ -44,12 +60,6 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     });
 
     //todo - check if any movements have already been judged
-    /*if (data?.any)
-    {
-        setMovements(data?.data);
-        setActiveRecord(data?.data[0]);
-    }
-*/
 
   const handleNextMovement = () => {
       
@@ -67,6 +77,7 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
 
     return (
     <>
+        
         <NavLinks selectedDisplay={
             {
                 competition: activeComp, 
@@ -74,14 +85,14 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
                 classTest: activeClassTest
             }} 
             show={true} />
-    
+
         <Box maxW="2xl" m="0 auto">
             {isLoading ? (
                 <>Loading...</>
             ) : isError ? (
                 <>Error Loading....</>
             ) :
-                <EnterScore onScoreSaved={handleNextMovement} rider={{riderTestId: activeRiderTestId, riderDetails: "new rider"}} movement={data?.any ? data[0] : {}}/>
+                <EnterScore onScoreSaved={handleNextMovement} rider={{riderTestId: activeRiderTestId, riderDetails: "new rider"}} movement={data?.data != null ? data.data[activeRecord] : dummyRecord}/>
             }
         
         </Box>
