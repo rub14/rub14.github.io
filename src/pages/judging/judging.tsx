@@ -2,7 +2,6 @@ import { useSelect, IResourceComponentsProps } from "@refinedev/core";
 import { Box, Button, Stack, Heading, Text, Select } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import {useState, useEffect} from 'react';
-import { PickCompTest } from "../../components/pickcomptest";
 import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 

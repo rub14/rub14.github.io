@@ -10,7 +10,8 @@ import { useDocumentTitle } from "@refinedev/react-router-v6";
 export const PickRider: React.FC<IResourceComponentsProps> = () => {
     useDocumentTitle("Pick Rider | Scoring");
     const { id } = useParams();
-    const [riderTestId, setRiderTestId] = useState(0)
+    const [activeRiderTestId, setActiveRiderTestId] = useState(0);
+    const [activeRiderDetails, setActiveRiderDetails] = useState('');
     const [activeComp, setActiveComp] = useState('');
     const [activeClassType, setActiveClassType] = useState('');
     const [activeClassTest, setActiveClassTest] = useState('');
@@ -19,6 +20,10 @@ export const PickRider: React.FC<IResourceComponentsProps> = () => {
       setActiveComp(localStorage.getItem("comp") ?? '');
       setActiveClassType( localStorage.getItem("classType") ?? '');
       setActiveClassTest( localStorage.getItem("classTest") ?? '');
+      
+      const riderTestId = (localStorage.getItem("riderTestId"));
+      if (riderTestId)
+        setActiveRiderTestId(parseInt(riderTestId))
 
     }, []);
 
@@ -49,11 +54,34 @@ export const PickRider: React.FC<IResourceComponentsProps> = () => {
       const newValue = e.target.value
       localStorage.setItem("riderTestId", newValue);
       if (newValue != '')
-        setRiderTestId(parseInt(newValue));
+      {
+        const index = riderOptions.findIndex((w) => w.value == newValue);
+        if (index != -1)
+        {
+          setActiveRiderTestId(parseInt(newValue));
+          setActiveRiderDetails(riderOptions[index].label);
+          setActiveRider( newValue, riderOptions[index].label );
+        }
+        else
+          clearActiveRider();
+      }
       else
-        setRiderTestId(0);
-
+      {
+        clearActiveRider();
+      }
     };
+
+    const clearActiveRider = () => {
+        setActiveRiderTestId(0);
+        setActiveRiderDetails('');
+        localStorage.setItem("riderTestId", '');
+        localStorage.setItem("riderDetails", '');
+    }
+
+    const setActiveRider = (riderTestId: string, riderDetails: string) => {
+      localStorage.setItem("riderTestId", riderTestId);
+      localStorage.setItem("riderDetails", riderDetails);
+    }
 
     const navigate = useNavigate();
 
@@ -63,7 +91,7 @@ export const PickRider: React.FC<IResourceComponentsProps> = () => {
     }
 
     const handleNext = () => {
-      navigate(`/judging/scoretest/${riderTestId}`)
+      navigate(`/judging/scoretest/${activeRiderTestId}`)
 
     }
 
@@ -89,6 +117,7 @@ export const PickRider: React.FC<IResourceComponentsProps> = () => {
                 m="0 auto"
                 mt="8"
                 placeholder='Select Rider'
+                defaultValue={activeRiderTestId}
                 onChange={handleSelectRider}>
                 {riderOptions?.map(option => (
                             <option key={option.value} value={option.value}>

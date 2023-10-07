@@ -52,7 +52,7 @@ import {
   RiderTestShow,
 } from "./pages/rider_tests";
 import { supabaseClient } from "./utility";
-import { Judging, PickRider, ScoreTest, MovementScoreCreate } from "./pages/judging";
+import { Judging, PickRider, ScoreTest } from "./pages/judging";
 import { IconPencil } from "@tabler/icons";
 import { Title } from "./components/title";
 
@@ -70,12 +70,12 @@ function App() {
             routerProvider={routerBindings}
             notificationProvider={notificationProvider}
             resources={[
-              /*{
+              {
                 name: "movement_scores",
-                list: "movement_scores",
-                create: "/movement_scores/create",
-                icon: <IconPencil />
-              },*/
+                identifier: "score_test",
+                icon: <IconPencil />,
+                create: "/judging/scoretest/:id"
+              },
               {
                 name: "tests",
                 list: "/tests",
@@ -151,7 +151,7 @@ function App() {
                   <Route index element={<Judging />} />
                   <Route path="pickrider/:id" element={<PickRider/>} />
                   <Route path="scoretest/:id" element={<ScoreTest/>} />
-                  <Route path="create" element={<MovementScoreCreate />} />
+              
                 </Route>
                 <Route path="/tests">
                   <Route index element={<TestList />} />
