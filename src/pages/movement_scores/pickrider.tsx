@@ -1,27 +1,30 @@
 import { useSelect, IResourceComponentsProps, useList, HttpError } from "@refinedev/core";
-import { Heading, Text, Select, Box} from "@chakra-ui/react";
+import { Heading, Text, Select, Box, Button, Stack, Spacer } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import React from "react";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {NavLinks} from '../../components/navlinks';
 import { useParams } from "react-router-dom";
 import { useDocumentTitle } from "@refinedev/react-router-v6";
-import {IClassTestView} from "../../interfaces/props";
 
 export const PickRider: React.FC<IResourceComponentsProps> = () => {
     useDocumentTitle("Pick Rider | Scoring");
     const { id } = useParams();
     const [activeRider, setActiveRider] = useState(0);
+    const [activeComp, setActiveComp] = useState('');
+    const [activeClassType, setActiveClassType] = useState('');
+    const [activeClassTest, setActiveClassTest] = useState('');
 
-    const { data, isLoading, isError } = useList<IClassTestView, HttpError>({
-      resource: "compclasstests_view",
-      filters: [
-          {
-              field: "id",
-              operator: "eq",
-              value: id
-          },
-      ],
-    });
+    useEffect(() => {
+      setActiveComp(localStorage.getItem("comp") ?? '');
+      setActiveClassType( localStorage.getItem("classType") ?? '');
+      setActiveClassTest( localStorage.getItem("classTest") ?? '');
+
+      console.log("activeComp", activeComp);
+      console.log("activeClassType", activeClassType);
+      console.log("activeClassTest", activeClassTest);
+    }, []);
+
 
     const { options: riderOptions } = useSelect({
       resource: "riderclasstests_view",
@@ -55,25 +58,31 @@ export const PickRider: React.FC<IResourceComponentsProps> = () => {
         
     };
 
+    const navigate = useNavigate();
+
+    const handleBack = () => {
+      navigate("/judging")
+
+    }
+
+    const handleNext = () => {
+      //navigate(`scoretest${riderTestId}`)
+
+    }
+
     return (
         <>
 
           <Box maxW="2xl" m="0 auto">
-              {isLoading ? (
-                  <>Loading...</>
-              ) : isError ? (
-                  <>Error Loading....</>
-              ) :
+      
               <NavLinks selectedDisplay={
                 {
-                  competition: data?.any ? data[0].competition_name : "", 
-                  classType: data?.any ? data[0].class_types_name : "", 
-                  classTest: data?.any ? data[0].phase_name : ""
+                  competition: activeComp, 
+                  classType: activeClassType, 
+                  classTest: activeClassTest
                 }} 
                 show={true} />
-              }
-            
-        
+              
             <Heading as="h1" textAlign="center" fontSize="md" mt="100px">
                 Rider List
             </Heading>
@@ -90,6 +99,37 @@ export const PickRider: React.FC<IResourceComponentsProps> = () => {
                             </option>
                 ))}
             </Select>
+
+            <Stack direction='row' spacing={4} align='center'>
+              <Button
+                  p="8"
+                  px="50px"
+                  colorScheme='green'
+                  borderRadius="10px"
+                  mt="8"
+                  fontWeight="bold"
+                  color="white"
+                  fontSize="xl"
+                  onClick={handleBack}
+                >
+                  Prev
+                </Button>
+                <Spacer />
+                <Button
+                  p="8"
+                  px="50px"
+                  colorScheme='green'
+                  borderRadius="10px"
+                  mt="8"
+                  fontWeight="bold"
+                  color="white"
+                  fontSize="xl"
+                  onClick={handleNext}
+                >
+                  Next
+                </Button>
+              
+              </Stack>
 
           </Box>
 

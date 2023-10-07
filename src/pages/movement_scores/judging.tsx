@@ -1,93 +1,236 @@
-import { useSelect, IResourceComponentsProps, useOne, Option } from "@refinedev/core";
-import { Heading, Text, Select, Box, Button, Stack, Spacer } from "@chakra-ui/react";
+import { useSelect, IResourceComponentsProps } from "@refinedev/core";
+import { Box, Button, Stack, Heading, Text, Select } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import { PickCompTest } from "../../components/pickcomptest";
-import { PickRider } from "./pickrider";
-import { ScoreTest } from "./scoretest";
-import {IJudgingSession, IRider, IMovementList} from "../../interfaces/props";
-import { useList, HttpError } from "@refinedev/core";
 import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 
 export const Judging: React.FC<IResourceComponentsProps> = () => {
     useDocumentTitle("Judging | Scoring");
 
-    const activeJudgingSession: IJudgingSession =
-      {
-        competitionId: '0',
-        competitionName: '',
-        classTypeId: '0',
-        classTypeName: '',
-        classTestId: '0',
-        classPhaseName: ''
-      };
+    const [compId, setCompId] = useState(0);
+    const [comp, setComp] = useState('');
+    const [classTypeId, setClassTypeId] = useState(0);
+    const [classType, setClassType] = useState('');
+    const [classTestId, setClassTestId] = useState(0);
 
-    const activeRider: IRider = 
+    const { options: compOptions } = useSelect({
+      resource: "competitions",
+      optionLabel: "name",
+      pagination: {
+        mode: "off",
+      },
+      sorters: [
       {
-        riderTestId: 0,
-        riderDetails: ''
-      }; 
+          field: "name",
+          order: "asc",
+      },
+      ]
+    });
+    const { options: classTypeOptions } = useSelect({
+      resource: "classtypes_view",
+      optionLabel: "name",
+      pagination: {
+        mode: "off",
+      },
+      filters: [
+          {
+              field: "competition_id",
+              operator: "eq",
+              value: compId
+          },
+      ]
+    });
+
+    const { options: classTestOptions } = useSelect({
+      resource: "compclasstests_view",
+      optionLabel: "phase_name",
+      pagination: {
+        mode: "off",
+      },
+      filters: [
+          {
+              field: "competition_id",
+              operator: "eq",
+              value: compId
+          },
+          {
+            field: "class_type_id",
+            operator: "eq",
+            value: classTypeId
+        },
+      ]
+    });
+
+    useEffect(() => {
+      const lastComp = localStorage.getItem("compId");
+      const lastClass = localStorage.getItem("classTypeId");
+      const lastClassTest = localStorage.getItem("classTestId");
+
+      if (lastComp && lastClass && lastClassTest)
+      {
+        setCompId(parseInt(lastComp));
+        setClassTypeId(parseInt(lastClass));
+        setClassTestId(parseInt(lastClassTest));
+      }
+      //else
+       // console.log('default comp not found');
+    }, []);
+    
+
+    const handleSelectComp = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const newValue = e.target.value;
       
+      if (newValue != '')
+      {
+        const compIndex = compOptions.findIndex((w) => w.value == newValue)
+        if (compIndex != -1)
+        {
+          setCompId(parseInt(newValue));
+          setComp(compOptions[compIndex].label);
+          clearActiveClassType();
+        }
+        else
+          clearActiveComp();
+      }  
+      else
+        clearActiveComp();
+
+  };
+
+  const handleSelectClass = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = e.target.value;
+
+    if (newValue != '')
+    {
+      const index = classTypeOptions.findIndex((w) => w.value == newValue)
+      if (index != -1)
+      {
+        setClassTypeId(parseInt(newValue));
+        setClassType(classTypeOptions[index].label);
+        clearActiveClassTest();
+      }
+      else
+        clearActiveClassType();
+
+    } 
+    else
+      clearActiveClassType();
+
+  };
+
+  const handleSelectClassTest = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = e.target.value;
+
+    if (newValue != '')
+    {
+      const index = classTestOptions.findIndex((w) => w.value == newValue)
+      if (index != -1)
+      {
+        setClassTestId(parseInt(newValue));
+        setActiveJudgingSession(parseInt(newValue),classTestOptions[index].label);
+      }
+      else
+        clearActiveClassTest();
+      
+    }
+    else
+      clearActiveClassTest();
+    
+  };
+
+  const setActiveJudgingSession = (classTestId: number, classTest: string) => {
+    localStorage.setItem("compId", compId.toString());
+    localStorage.setItem("comp", comp);
+    localStorage.setItem("classTypeId", classTypeId.toString());
+    localStorage.setItem("classType", classType);
+    localStorage.setItem("classTestId", classTestId.toString());
+    localStorage.setItem("classTest", classTest);
+  };
+
+  const clearActiveClassTest = () => {
+    setClassTestId(0);
+    //localStorage.setItem("classTestId", '');
+    //localStorage.setItem("classTest", '');
+  }
+
+  const clearActiveClassType = () => {
+    clearActiveClassTest();
+    setClassTypeId(0);
+    setClassType('');
+    //localStorage.setItem("classTypeId", '');
+    //localStorage.setItem("classType", '');
+    
+  }
+
+  const clearActiveComp = () => {
+    clearActiveClassType();
+    setCompId(0);
+    setComp('');
+   //localStorage.setItem("compId", '');
+    //localStorage.setItem("comp", '');
+    
+  }
+
+
     const navigate = useNavigate();
 
-    const pickCompTest = () => {
-      //return <PickCompTest judgingSession={activeJudgingSession} />
-      
-    };
-
-    const pickRider = () => {
-      //return <PickRider judgingSession={activeJudgingSession} rider={activeRider} />
-      navigate(`pickrider/${localStorage.getItem("classTestId")}`)
-    };
-
-    const scoreTest = () => {
-      //return <ScoreTest judgingSession={activeJudgingSession} rider={activeRider} />
-    };
-
-    const [wizardSteps, setWizardSteps] = useState([
-      { key: 'pickCompTest', title: 'Online Scoring', isDone: false, page: pickCompTest, showNav: false },
-      { key: 'pickRider', title: 'Rider List', isDone: false, page: pickRider, showNav: true },
-      { key: 'scoreRiderTest', title: 'Judge Test', isDone: false, page: scoreTest, showNav: true }
-  
-    ]);
-    const [activeStep, setActiveStep] = useState(wizardSteps[0]);
-    const steps = ['pickCompTest', 'pickRider', 'enterScore', 'ViewTallyScore'];
-
     const handleNext = () => {
-      if (wizardSteps[wizardSteps.length - 1].key === activeStep.key) {
-        alert('You have completed all steps.');
-        return;
-      }
-
-      const index = wizardSteps.findIndex(x => x.key === activeStep.key);
-      setWizardSteps(prevStep => prevStep.map(x => {
-        if (x.key === activeStep.key) x.isDone = true;
-        return x;
-      }))
-      setActiveStep(wizardSteps[index + 1]);
-      wizardSteps[index + 1].page();
-      console.log(activeStep.key, activeStep.page);
-      //navigate(`pickrider/${activeJudgingSession.classTestId}`)
+      navigate(`pickrider/${classTestId}`)
 
     }
-
-    const handleBack = () => {
-      const index = wizardSteps.findIndex(x => x.key === activeStep.key);
-      if (index === 0) return;
-     
-      setWizardSteps(prevStep => prevStep.map(x => {
-        if (x.key === activeStep.key) x.isDone = false;
-        return x;
-      }))
-      setActiveStep(wizardSteps[index - 1]);
-    }
-
     
     return (
       <Box maxW="2xl" m="0 auto">
         
-        <PickCompTest />
+        <Heading as="h1" textAlign="center" fontSize="5xl" mt="100px">
+                Online Scoring
+            </Heading>
+            <Text fontSize="xl" textAlign="center" mt="30px">
+                Equestrian test scoring and judging
+            </Text>
+            <Select 
+                w="70%"
+                m="0 auto"
+                mt="8"
+                placeholder='Select Competition'
+                value={compId}
+                onChange={handleSelectComp}>
+                {compOptions?.map(option => (
+                            <option key={option.value} value={option.value}>
+                            {option.label}
+                            </option>
+                ))}
+            </Select>
+
+            <Select 
+                w="70%"
+                m="0 auto"
+                mt="8"
+                placeholder='Select Class'
+                value={classTypeId}
+                onChange={handleSelectClass}>
+                {classTypeOptions?.map(option => (
+                            <option key={option.value} value={option.value}>
+                            {option.label}
+                            </option>
+                ))}
+            </Select>
+
+            <Select 
+                w="70%"
+                m="0 auto"
+                mt="8"
+                placeholder='Select Phase'
+                value={classTestId}
+                onChange={handleSelectClassTest}>
+                {classTestOptions?.map(option => (
+                            <option key={option.value} value={option.value}>
+                            {option.label}
+                            </option>
+                ))}
+            </Select>
                           
         <Box
           display='flex'
@@ -98,21 +241,7 @@ export const Judging: React.FC<IResourceComponentsProps> = () => {
           mb={2}
         >
           <Stack direction='row' spacing={4} align='center'>
-          <Button
-              p="8"
-              px="50px"
-              colorScheme='green'
-              borderRadius="10px"
-              mt="8"
-              fontWeight="bold"
-              color="white"
-              fontSize="xl"
-              onClick={handleBack}
-              display={activeStep.key != "enterScore" ? "inline-flex" : "none"}
-            >
-              Prev
-            </Button>
-            <Spacer />
+          
             <Button
               p="8"
               px="50px"
@@ -123,9 +252,8 @@ export const Judging: React.FC<IResourceComponentsProps> = () => {
               color="white"
               fontSize="xl"
               onClick={handleNext}
-              display={activeStep.key != "scoreRiderTest" ? "inline-flex" : "none"}
             >
-              {activeStep == wizardSteps[0] ? 'Start' : 'Next'}
+              Start
             </Button>
            
           </Stack>

@@ -17,10 +17,16 @@ import routerBindings, {
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
 import { dataProvider, liveProvider } from "@refinedev/supabase";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import authProvider from "./authProvider";
 import { Header } from "./components/header";
 //import { Sider } from "./components/sider";
+import {
+  TestCreate,
+  TestEdit,
+  TestList,
+  TestShow,
+} from "./pages/tests";
 import {
   MovementCreate,
   MovementEdit,
@@ -33,6 +39,18 @@ import {
   CompClassList,
   CompClassShow,
 } from "./pages/comp_classes";
+import {
+  ClassTestCreate,
+  ClassTestEdit,
+  ClassTestList,
+  ClassTestShow,
+} from "./pages/class_tests";
+import {
+  RiderTestCreate,
+  RiderTestEdit,
+  RiderTestList,
+  RiderTestShow,
+} from "./pages/rider_tests";
 import { supabaseClient } from "./utility";
 import { Judging, PickRider, MovementScoreCreate } from "./pages/movement_scores";
 import { IconPencil } from "@tabler/icons";
@@ -52,11 +70,21 @@ function App() {
             routerProvider={routerBindings}
             notificationProvider={notificationProvider}
             resources={[
-              {
+              /*{
                 name: "movement_scores",
                 list: "movement_scores",
                 create: "/movement_scores/create",
                 icon: <IconPencil />
+              },*/
+              {
+                name: "tests",
+                list: "/tests",
+                create: "/tests/create",
+                edit: "/tests/edit/:id",
+                show: "/tests/show/:id",
+                meta: {
+                  canDelete: true,
+                },
               },
               {
                 name: "movements",
@@ -74,6 +102,26 @@ function App() {
                 create: "/comp_classes/create",
                 edit: "/comp_classes/edit/:id",
                 show: "/comp_classes/show/:id",
+                meta: {
+                  canDelete: true,
+                },
+              },
+              {
+                name: "class_tests",
+                list: "/class_tests",
+                create: "/class_tests/create",
+                edit: "/class_tests/edit/:id",
+                show: "/class_tests/show/:id",
+                meta: {
+                  canDelete: true,
+                },
+              },
+              {
+                name: "rider_tests",
+                list: "/rider_tests",
+                create: "/rider_tests/create",
+                edit: "/rider_tests/edit/:id",
+                show: "/rider_tests/show/:id",
                 meta: {
                   canDelete: true,
                 },
@@ -97,12 +145,18 @@ function App() {
               >
                 <Route
                   index
-                  element={<NavigateToResource resource="movement_scores" />}
+                  element={<Navigate to="judging" />}
                 />
-                <Route path="/movement_scores">
+                <Route path="/judging">
                   <Route index element={<Judging />} />
                   <Route path="pickrider/:id" element={<PickRider/>} />
                   <Route path="create" element={<MovementScoreCreate />} />
+                </Route>
+                <Route path="/tests">
+                  <Route index element={<TestList />} />
+                  <Route path="create" element={<TestCreate />} />
+                  <Route path="edit/:id" element={<TestEdit />} />
+                  <Route path="show/:id" element={<TestShow />} />
                 </Route>
                 <Route path="/movements">
                   <Route index element={<MovementList />} />
@@ -115,6 +169,18 @@ function App() {
                   <Route path="create" element={<CompClassCreate />} />
                   <Route path="edit/:id" element={<CompClassEdit />} />
                   <Route path="show/:id" element={<CompClassShow />} />
+                </Route>
+                <Route path="/class_tests">
+                  <Route index element={<ClassTestList />} />
+                  <Route path="create" element={<ClassTestCreate />} />
+                  <Route path="edit/:id" element={<ClassTestEdit />} />
+                  <Route path="show/:id" element={<ClassTestShow />} />
+                </Route>
+                <Route path="/rider_tests">
+                  <Route index element={<RiderTestList />} />
+                  <Route path="create" element={<RiderTestCreate />} />
+                  <Route path="edit/:id" element={<RiderTestEdit />} />
+                  <Route path="show/:id" element={<RiderTestShow />} />
                 </Route>
                 <Route path="*" element={<ErrorComponent />} />
               </Route>

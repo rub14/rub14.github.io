@@ -5,9 +5,7 @@ import {useState, useEffect} from 'react';
 import {IJudgingComponentProps} from "../../interfaces/props";
 
 export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
-    const [comp, setComp] = useState('');
     const [compId, setCompId] = useState(0);
-    const [classType, setClassType] = useState('');
     const [classTypeId, setClassTypeId] = useState(0);
     const [classTestId, setClassTestId] = useState(0);
 
@@ -84,7 +82,8 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
           if (compIndex != -1)
           {
             setCompId(parseInt(newValue));
-            setComp(compOptions[compIndex].label);
+            localStorage.setItem("compId", compId.toString());
+            localStorage.setItem("comp", compOptions[compIndex].label);
             clearActiveClassType();
           }
           else
@@ -104,7 +103,8 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
         if (index != -1)
         {
           setClassTypeId(parseInt(newValue));
-          setClassType(classTypeOptions[index].label);
+          localStorage.setItem("classTypeId", classTypeId.toString());
+          localStorage.setItem("classType", classTypeOptions[index].label);
           clearActiveClassTest();
         }
         else
@@ -125,7 +125,8 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
         if (index != -1)
         {
           setClassTestId(parseInt(newValue));
-          setActiveJudgingSession(parseInt(newValue),classTestOptions[index].label);
+          localStorage.setItem("classTestId", classTestId.toString());
+          localStorage.setItem("classTest", classTestOptions[index].label);
         }
         else
           clearActiveClassTest();
@@ -137,35 +138,30 @@ export const PickCompTest: React.FC<IResourceComponentsProps> = () => {
     };
 
     const setActiveJudgingSession = (classTestId: number, classTest: string) => {
-      localStorage.setItem("compId", compId.toString());
-      localStorage.setItem("comp", comp);
-      localStorage.setItem("classTypeId", classTypeId.toString());
-      localStorage.setItem("classType", classType);
-      localStorage.setItem("classTestId", classTestId.toString());
-      localStorage.setItem("classTest", classTest);
+      
+      
+      
     };
 
     const clearActiveClassTest = () => {
       setClassTestId(0);
-      //localStorage.setItem("classTestId", '');
-      //localStorage.setItem("classTest", '');
+      localStorage.setItem("classTestId", '');
+      localStorage.setItem("classTest", '');
     }
 
     const clearActiveClassType = () => {
       clearActiveClassTest();
       setClassTypeId(0);
-      setClassType('');
-      //localStorage.setItem("classTypeId", '');
-      //localStorage.setItem("classType", '');
+      localStorage.setItem("classTypeId", '');
+      localStorage.setItem("classType", '');
       
     }
 
     const clearActiveComp = () => {
       clearActiveClassType();
       setCompId(0);
-      setComp('');
-     //localStorage.setItem("compId", '');
-      //localStorage.setItem("comp", '');
+      localStorage.setItem("compId", '');
+      localStorage.setItem("comp", '');
       
     }
 
