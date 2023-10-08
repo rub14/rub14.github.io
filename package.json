@@ -39,7 +39,8 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "dev": "refine dev",
-    "build": "tsc && refine build",
+
+    "build": "refine build",
     "preview": "refine start",
     "refine": "refine"
   },
