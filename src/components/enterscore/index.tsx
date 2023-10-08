@@ -11,7 +11,6 @@ import {
     FormErrorMessage,
     Select,
     Input,
-    Checkbox,
     Textarea,
     useRadioGroup,
     Radio,
@@ -23,7 +22,6 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "@refinedev/react-hook-form";
 import {IJudgingScoringComponentProps} from "../../interfaces/props";
-import {NavLinks} from '../../components/navlinks';
 import {useState, useRef, useEffect} from 'react';
 import {RadioCard} from "../custom/radiocard"
 
@@ -33,10 +31,7 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
         saveButtonProps,
         register,
         formState: { errors,  },
-        resetField,
         reset,
-        defaultValues,
-        clearErrors
     } = useForm();
 
     const customButtonProps = {
