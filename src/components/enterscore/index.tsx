@@ -107,7 +107,7 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
     return (
         <>
 
-<Create resource="score_test" title={movement?.is_collective 
+<Create resource="score_test" breadcrumb={<></>} title={movement?.is_collective 
                 ? `Enter Collective for ${rider.riderDetails}` 
                 : `Enter Score for ${rider.riderDetails}` } 
                 isLoading={formLoading} saveButtonProps={saveButtonProps} 
@@ -174,20 +174,19 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
                 <FormControl>
                 <Input
                 type="number"
-          
+                display="none"
                 defaultValue={rider.riderTestId}
                     {...register("rider_test_id", {
                         required: "This field is required",
                         valueAsNumber: true,
                     })}
                 />
-
                 </FormControl>
      
                 <FormControl>
                 <Input
                     type="number"
-          
+                    display="none"
                     defaultValue={movement?.movement_id}
                     {...register("movement_id", {
                         required: "This field is required",
