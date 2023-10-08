@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy16
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
           path: ./dist
 
   deploy:
-    name: Deploy
+    name: Deploy16
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -44,7 +44,7 @@ jobs:
           name: production-files
           path: ./dist
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy16 to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
