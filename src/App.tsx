@@ -58,7 +58,7 @@ import { Title } from "./components/title";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/scoring-base">
       <RefineKbarProvider>
         {/* You can change the theme colors here. example: theme={RefineThemes.Magenta} */}
         <ChakraProvider theme={RefineThemes.Blue}>
