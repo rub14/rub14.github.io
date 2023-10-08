@@ -28,13 +28,17 @@ import { Create, SaveButton} from "@refinedev/chakra-ui";
 export const ScoreTest: React.FC<IResourceComponentsProps> = () => {                                     
     useDocumentTitle("Score Test | Scoring");
 
-    const { id } = useParams();
+    //const { id } = useParams();
 
     const {
         refineCore: { formLoading },
         saveButtonProps,
         register,
         formState: { errors },
+        resetField,
+        reset,
+        defaultValues,
+        clearErrors
     } = useForm();
 
     const customButtonProps = {
@@ -42,10 +46,6 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     };
  
     const footerButtons = <></>;
-
-    const clearForm = () => {
-        //reset form
-    }
 
     const [activeCompId, setActiveCompId] = useState(0);
     const [activeComp, setActiveComp] = useState('');
@@ -56,11 +56,12 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     const [activeRiderTestId, setActiveRiderTestId] = useState(0);
     const [activeRiderDetails, setActiveRiderDetails] = useState('new rider')
     const [activeRecord, setActiveRecord] = useState(0);
+    const [id, setId] = useState(1);
 
     const dummyRecord = {
                 class_test_id: 0,
                 movement_id: 0,
-                item_num: 0,
+                id: 0, //item_num
                 is_collective: false,
                 description: '',
                 directive: '',
@@ -93,7 +94,7 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
 
     }, []);
 
-    const { data, isLoading, isError } = useList<IMovementList, HttpError>({
+    /*const { data, isLoading, isError } = useList<IMovementList, HttpError>({
         resource: "movementclasstests_view",
         sorters: [
             {
@@ -108,7 +109,30 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
                 value: activeClassTestId
             },
         ],
+    });*/
+
+    const { data, isLoading, isError } = useOne<IMovementList, HttpError>({
+        resource: "movementclasstests_view",
+        id,
+        meta: {
+            filter: {
+                field: "class_test_id",
+                operator: "eq",
+                value: activeClassTestId
+            },
+        }
     });
+
+    const movement = data?.data
+
+    useEffect(() => {
+        resetField("comment");
+        resetField("score");
+        const defaultValues = {movement_id: movement?.movement_id,
+                              };
+        reset({...defaultValues});
+        clearErrors();
+    }, [id]);
 
     //todo - check if any movements have already been judged
 
@@ -121,9 +145,9 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     else
         alert('last movement record has been reached')
     */
-   console.log('data?.total', data?.total);
-    if (data?.any && data?.total > activeRecord)
-        setActiveRecord(activeRecord + 1);
+   console.log('data?.total', movement?.total_movements);
+    if (movement && movement?.total_movements > id)
+        setId(id + 1);
   }
 
   const handleScoringDone = () => {
@@ -144,6 +168,7 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
 
     const recordScore = () => {
         saveButtonProps.onClick();
+        
         if (!errors.any)
             handleNextMovement();
     }
@@ -170,7 +195,7 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
                 <>Error Loading....</>
             ) : 
             
-            <Create resource="score_test" title={data?.is_collective 
+            <Create resource="score_test" title={movement?.is_collective 
                 ? `Enter Collective for ${activeRiderDetails}` 
                 : `Enter Score for ${activeRiderDetails}` } 
                 isLoading={formLoading} saveButtonProps={saveButtonProps} 
@@ -186,18 +211,18 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
                 justifyContent={{ base: "center", md: "center" }}
                 >
                 <Box display="block" border="1px" padding="1rem" height="100%" width="100%">
-                    <h2>Movement #: {data?.data[activeRecord].item_num} of {data?.data[activeRecord].total_movements}</h2>
+                    <h2>Movement #: {movement?.id} of {movement?.total_movements}</h2>
                     <Text>
-                        {data?.data[activeRecord].description}    
+                        {movement?.description}    
                     </Text>
                 </Box>
                 <Spacer />
                 <Box display="block" border="1px" padding="1rem" height="100%" width="100%">
                     <Text display="none">
-                        Class Test: {data?.data[activeRecord].name}
+                        Class Test: {movement?.name}
                     </Text>
                     <Text>
-                        {data?.data[activeRecord].directive}
+                        {movement?.directive}
                     </Text>
                 </Box>
                 </Flex>
@@ -237,24 +262,27 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
                 <FormControl>
                 <Input
                 type="number"
-                display={"none"}
+          
                 defaultValue={activeRiderTestId}
                     {...register("rider_test_id", {
                         required: "This field is required",
                         valueAsNumber: true,
                     })}
                 />
+
                 </FormControl>
+     
                 <FormControl>
                 <Input
                     type="number"
-                    display={"none"}
-                    defaultValue={data?.data[activeRecord].movement_id}
+          
+                    defaultValue={movement?.movement_id}
                     {...register("movement_id", {
                         required: "This field is required",
                         valueAsNumber: true,
                     })}
                 />
+
                 </FormControl>
 
                 </Create>

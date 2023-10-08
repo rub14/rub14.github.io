@@ -24,7 +24,7 @@ export interface IJudgingSession {
 export interface IMovementList {
     class_test_id: number;
     movement_id: number;
-    item_num: number;
+    id: number; // item_num
     is_collective: boolean;
     description: string;
     directive: string;
