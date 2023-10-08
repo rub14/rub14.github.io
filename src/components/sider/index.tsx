@@ -32,11 +32,11 @@ import {
 } from "@chakra-ui/react";
 import { IconList, IconDashboard, IconPower } from "@tabler/icons";
 
-import { ThemedTitleV2 as DefaultTitle } from "../title";
+import { Title as DefaultTitle } from "../title";
 import { RefineThemedLayoutV2SiderProps } from "@refinedev/ui-types";
 import { useThemedLayoutContext } from "@refinedev/chakra-ui";
 
-export const Sider: React.FC<RefineThemedLayoutV2SiderProps> = ({
+export const MySider: React.FC<RefineThemedLayoutV2SiderProps> = ({
     Title: TitleFromProps,
     render,
     meta,
@@ -172,7 +172,7 @@ export const Sider: React.FC<RefineThemedLayoutV2SiderProps> = ({
                                         {(mobileSiderOpen ||
                                             !siderCollapsed) && (
                                             <Box flexGrow={1} textAlign="left">
-                                                {label}
+                                                XXX{label}
                                             </Box>
                                         )}
                                     </Button>

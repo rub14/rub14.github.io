@@ -1,0 +1,114 @@
+import { IResourceComponentsProps, useSelect } from "@refinedev/core";
+import { Create } from "@refinedev/chakra-ui";
+import {
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Select,
+    Input,
+} from "@chakra-ui/react";
+import { useForm } from "@refinedev/react-hook-form";
+
+export const ClassTestCreate: React.FC<IResourceComponentsProps> = () => {
+    const {
+        refineCore: { formLoading },
+        saveButtonProps,
+        register,
+        formState: { errors },
+    } = useForm();
+
+    const { options: compClassOptions } = useSelect({
+        resource: "compclass_view",
+        optionLabel: "name",
+
+    });
+
+    const { options: testOptions } = useSelect({
+        resource: "tests",
+        optionLabel: "name",
+    });
+
+    return (
+        <Create isLoading={formLoading} saveButtonProps={saveButtonProps}>
+            <FormControl mb="3" isInvalid={!!errors?.comp_class_id}>
+                <FormLabel>Comp Class</FormLabel>
+                <Select
+                    placeholder="Select comp_class"
+                    {...register("comp_class_id", {
+                        required: "This field is required",
+                    })}
+                >
+                    {compClassOptions?.map((option) => (
+                        <option value={option.value} key={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </Select>
+                <FormErrorMessage>
+                    {(errors as any)?.comp_class_id?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!(errors as any)?.phase_num}>
+                <FormLabel>Phase Num</FormLabel>
+                <Input
+                    type="number"
+                    {...register("phase_num", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.phase_num?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!errors?.test_id}>
+                <FormLabel>Test</FormLabel>
+                <Select
+                    placeholder="Select test"
+                    {...register("test_id", {
+                        required: "This field is required",
+                    })}
+                >
+                    {testOptions?.map((option) => (
+                        <option value={option.value} key={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </Select>
+                <FormErrorMessage>
+                    {(errors as any)?.test_id?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            {/* 
+                    DatePicker component is not included in "@refinedev/chakra-ui" package.
+                    To use a <DatePicker> component, you can examine the following links:
+                    
+                    - https://github.com/aboveyunhai/chakra-dayzed-datepicker
+                    - https://github.com/wojtekmaj/react-date-picker
+                */}
+            <FormControl mb="3" isInvalid={!!(errors as any)?.created_at}>
+                <FormLabel>Created At</FormLabel>
+                <Input
+                    {...register("created_at", {
+                        required: "This field is required",
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.created_at?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!(errors as any)?.phase_name}>
+                <FormLabel>Phase Name</FormLabel>
+                <Input
+                    type="text"
+                    {...register("phase_name", {
+                        required: "This field is required",
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.phase_name?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+        </Create>
+    );
+};
