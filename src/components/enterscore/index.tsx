@@ -24,7 +24,7 @@ import {
 import { useForm } from "@refinedev/react-hook-form";
 import {IJudgingScoringComponentProps} from "../../interfaces/props";
 import {NavLinks} from '../../components/navlinks';
-import {useState, useRef} from 'react';
+import {useState, useRef, useEffect} from 'react';
 import {RadioCard} from "../custom/radiocard"
 
 export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSaved, rider, movement})=> {
@@ -32,7 +32,11 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
         refineCore: { formLoading },
         saveButtonProps,
         register,
-        formState: { errors },
+        formState: { errors,  },
+        resetField,
+        reset,
+        defaultValues,
+        clearErrors
     } = useForm();
 
     const customButtonProps = {
@@ -41,12 +45,19 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
  
     const footerButtons = <></>;
 
-    console.log("movement", movement)
+    //console.log("movement", movement)
 
-    const clearForm = () => {
-        //reset form
-    }
+    useEffect(() => {
+        const defaultValues = {
+            movement_id: movement?.movement_id,
+            score: null,
+            comment: null,
+            };
+        reset({...defaultValues});
+    }, [movement]);
 
+    //this was using radio buttons - had to take it out for now as
+    // it was getting complicated
     const [displayScoreSelect, setdisplayScoreSelect] = useState(true);
     
     // const toast = useToast();
@@ -86,7 +97,7 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
     const recordScore = () => {
         saveButtonProps.onClick();
         if (!errors.any)
-            onScoreSaved();
+            onScoreSaved();  
     }
 
     const goBack = () => {
@@ -96,93 +107,97 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
     return (
         <>
 
-            <Create title={movement?.is_collective 
-                                    ? `Enter Collective for ${rider.riderDetails}` 
-                                     : `Enter Score for ${rider.riderDetails}` } 
-                            isLoading={formLoading} saveButtonProps={saveButtonProps} 
-                            footerButtons={footerButtons} footerButtonProps={{}}>
+<Create resource="score_test" title={movement?.is_collective 
+                ? `Enter Collective for ${rider.riderDetails}` 
+                : `Enter Score for ${rider.riderDetails}` } 
+                isLoading={formLoading} saveButtonProps={saveButtonProps} 
+                footerButtons={footerButtons} footerButtonProps={{}}>
+
                 <Flex
-                    
-                    align="center"
-                    wrap={{ base: "wrap", md: "wrap" }}
-                    bg="green"
-                    mr={{ md: "5" }}
-                    color="white"
-                    justifyContent={{ base: "center", md: "center" }}
+
+                align="center"
+                wrap={{ base: "wrap", md: "wrap" }}
+                bg="green"
+                mr={{ md: "5" }}
+                color="white"
+                justifyContent={{ base: "center", md: "center" }}
                 >
-                    <Box display="block" border="1px" padding="1rem" height="100%" width="100%">
-                        <h2>Movement #: {movement?.item_num} of {movement?.total_movements}</h2>
-                        <Text>
-                            {movement?.description}    
-                        </Text>
-                    </Box>
-                    <Spacer />
-                    <Box display="block" border="1px" padding="1rem" height="100%" width="100%">
-                        <Text display="none">
-                            Class Test: {movement?.name}
-                        </Text>
-                        <Text>
-                            {movement?.directive}
-                        </Text>
-                    </Box>
+                <Box display="block" border="1px" padding="1rem" height="100%" width="100%">
+                    <h2>Movement #: {movement?.id} of {movement?.total_movements}</h2>
+                    <Text>
+                        {movement?.description}    
+                    </Text>
+                </Box>
+                <Spacer />
+                <Box display="block" border="1px" padding="1rem" height="100%" width="100%">
+                    <Text display="none">
+                        Class Test: {movement?.name}
+                    </Text>
+                    <Text>
+                        {movement?.directive}
+                    </Text>
+                </Box>
                 </Flex>
 
                 <FormControl mt="3" mb="3" isInvalid={!!(errors as any)?.score}>
-                    <FormLabel>Score</FormLabel>
-                    <Select
-                        placeholder="Select score"
-                        {...register("score", {
-                            required: "This field is required",
-                        })}
-                    >
-                    {scoreValueOptions?.map((option) => (
-                        <option value={option.value} key={option.value}>
-                            {option.value} {option.value.toString().includes(".") ? String.fromCharCode(160).repeat(5) : String.fromCharCode(160).repeat(8)} {option.label}
-                        </option>
-                    ))}
+                <FormLabel>Score</FormLabel>
+                <Select
+                    placeholder="Select score"
+                    {...register("score", {
+                        required: "This field is required",
+                    })}
+                >
+                {scoreValueOptions?.map((option) => (
+                    <option value={option.value} key={option.value}>
+                        {option.value} {option.value.toString().includes(".") ? String.fromCharCode(160).repeat(5) : String.fromCharCode(160).repeat(8)} {option.label}
+                    </option>
+                ))}
                 </Select>
-                    
-                    <FormErrorMessage>
-                        {(errors as any)?.score?.message as string}
-                    </FormErrorMessage>
+
+                <FormErrorMessage>
+                    {(errors as any)?.score?.message as string}
+                </FormErrorMessage>
                 </FormControl>
 
                 <FormControl mb="3" isInvalid={!!(errors as any)?.comment}>
-                    <FormLabel>Comment</FormLabel>
-                    <Textarea
-                        type="text"
-                        {...register("comment", {
-                            required: "This field is required",
-                        })}
-                    />
-                    <FormErrorMessage>
-                        {(errors as any)?.comment?.message as string}
-                    </FormErrorMessage>
+                <FormLabel>Comment</FormLabel>
+                <Textarea
+                    type="text"
+                    {...register("comment", {
+                        required: "This field is required",
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.comment?.message as string}
+                </FormErrorMessage>
                 </FormControl>
                 <FormControl>
-                    <Input
-                        type="number"
-                        display={"none"}
-                        defaultValue={rider?.riderTestId}
-                        {...register("rider_test_id", {
-                            required: "This field is required",
-                            valueAsNumber: true,
-                        })}
-                    />
+                <Input
+                type="number"
+          
+                defaultValue={rider.riderTestId}
+                    {...register("rider_test_id", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+
                 </FormControl>
+     
                 <FormControl>
-                    <Input
-                        type="number"
-                        display={"none"}
-                        defaultValue={movement?.movement_id}
-                        {...register("movement_id", {
-                            required: "This field is required",
-                            valueAsNumber: true,
-                        })}
-                    />
+                <Input
+                    type="number"
+          
+                    defaultValue={movement?.movement_id}
+                    {...register("movement_id", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+
                 </FormControl>
-               
-            </Create>
+
+                </Create>
              
             <Box
               width='90%'
