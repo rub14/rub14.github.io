@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+env:
+  VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+  VITE_SUPABASE_KEY: ${{ secrets.VITE_SUPABASE_KEY}}
+
 jobs:
   build:
     name: Build
@@ -24,9 +28,6 @@ jobs:
 
       - name: Build project
         run: npm run build
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_KEY: ${{ secrets.VITE_SUPABASE_KEY}}
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v3
