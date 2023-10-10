@@ -1,5 +1,5 @@
 import { useSelect, IResourceComponentsProps } from "@refinedev/core";
-import { Box, Button, Stack, Heading, Text, Select } from "@chakra-ui/react";
+import { Box, Button, Stack, Heading, Text, Select, Image} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import {useState, useEffect} from 'react';
 import { useDocumentTitle } from "@refinedev/react-router-v6";
@@ -182,54 +182,48 @@ export const Judging: React.FC<IResourceComponentsProps> = () => {
     
     return (
       <Box maxW="2xl" m="0 auto">
-        
-        <Heading as="h1" textAlign="center" fontSize="5xl" mt="100px">
-                Online Scoring
-            </Heading>
-            <Text fontSize="xl" textAlign="center" mt="30px">
-                Equestrian test scoring and judging
-            </Text>
-            <Select 
-                w="70%"
-                m="0 auto"
-                mt="8"
-                placeholder='Select Competition'
-                value={compId}
-                onChange={handleSelectComp}>
-                {compOptions?.map(option => (
-                            <option key={option.value} value={option.value}>
-                            {option.label}
-                            </option>
-                ))}
-            </Select>
+        <Image src={(localStorage.getItem("chakra-ui-color-mode") ?? '') == 'dark' ? "/header.png" : "/header_light.png"} alt="EquiJudge-image"/>
+        <Select 
+            w="70%"
+            m="0 auto"
+            mt="8"
+            placeholder='Select Competition'
+            value={compId}
+            onChange={handleSelectComp}>
+            {compOptions?.map(option => (
+                        <option key={option.value} value={option.value}>
+                        {option.label}
+                        </option>
+            ))}
+        </Select>
 
-            <Select 
-                w="70%"
-                m="0 auto"
-                mt="8"
-                placeholder='Select Class'
-                value={classTypeId}
-                onChange={handleSelectClass}>
-                {classTypeOptions?.map(option => (
-                            <option key={option.value} value={option.value}>
-                            {option.label}
-                            </option>
-                ))}
-            </Select>
+        <Select 
+            w="70%"
+            m="0 auto"
+            mt="8"
+            placeholder='Select Class'
+            value={classTypeId}
+            onChange={handleSelectClass}>
+            {classTypeOptions?.map(option => (
+                        <option key={option.value} value={option.value}>
+                        {option.label}
+                        </option>
+            ))}
+        </Select>
 
-            <Select 
-                w="70%"
-                m="0 auto"
-                mt="8"
-                placeholder='Select Phase'
-                value={classTestId}
-                onChange={handleSelectClassTest}>
-                {classTestOptions?.map(option => (
-                            <option key={option.value} value={option.value}>
-                            {option.label}
-                            </option>
-                ))}
-            </Select>
+        <Select 
+            w="70%"
+            m="0 auto"
+            mt="8"
+            placeholder='Select Phase'
+            value={classTestId}
+            onChange={handleSelectClassTest}>
+            {classTestOptions?.map(option => (
+                        <option key={option.value} value={option.value}>
+                        {option.label}
+                        </option>
+            ))}
+        </Select>
                           
         <Box
           width='90%'
