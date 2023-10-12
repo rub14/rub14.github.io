@@ -182,7 +182,8 @@ export const Judging: React.FC<IResourceComponentsProps> = () => {
     
     return (
       <Box maxW="2xl" m="0 auto">
-        <Image src={(localStorage.getItem("chakra-ui-color-mode") ?? '') == 'dark' ? "/header.png" : "/header_light.png"} alt="EquiJudge-image"/>
+        <Image src={(localStorage.getItem("chakra-ui-color-mode") ?? '') == 'dark' ? "https://drive.google.com/uc?id=1KQE2HqKB86UYbRyMucntdkrrfB0u6z7I" 
+                    : "https://drive.google.com/uc?id=14xzZXwNCDvAjMNLevlFFvTJjLutXaRTA"} alt="EquiJudge-image"/>
         <Select 
             w="70%"
             m="0 auto"

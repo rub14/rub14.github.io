@@ -137,7 +137,7 @@ function App() {
               <Route
                 element={
                   <Authenticated fallback={<CatchAllNavigate to="/login" />}>
-                    <ThemedLayoutV2 Header={() => <Header sticky/>} Title={Title}>
+                    <ThemedLayoutV2 Header={() => <Header sticky/>} Title={Title} >
                       <Outlet />
                     </ThemedLayoutV2>
                   </Authenticated>
