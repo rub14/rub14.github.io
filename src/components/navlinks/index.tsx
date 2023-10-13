@@ -9,6 +9,7 @@ interface ISelectedDisplay {
 
 export const NavLinks: React.FC<{selectedDisplay:ISelectedDisplay, show:boolean}> = ({selectedDisplay, show}) => {
     
+    const hideExit = true;
     return (
         <Flex
             as="nav"
@@ -48,7 +49,7 @@ export const NavLinks: React.FC<{selectedDisplay:ISelectedDisplay, show:boolean}
                 </Box>
                 <Spacer />
                 <Box
-                    display={{ base: show ? "block" : "none", md: "block" }}
+                    display={hideExit ? "none" : "block" }
                     mt={{ base: 2, md: 0 }}
                     >
                     <Button bg="transparent" border="1px">
