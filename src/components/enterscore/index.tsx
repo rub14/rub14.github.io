@@ -18,29 +18,39 @@ import {
     Flex,
     Stack,
     HStack,
-    useToast
+    useToast,
+    Icon
 } from "@chakra-ui/react";
+import { IconArrowLeft } from "@tabler/icons";
 import { useForm } from "@refinedev/react-hook-form";
 import {IJudgingScoringComponentProps} from "../../interfaces/props";
 import {useState, useRef, useEffect} from 'react';
 import {RadioCard} from "../custom/radiocard"
+import { objectInfer } from "@refinedev/inferencer/src/field-inferencers/object";
 
-export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSaved, rider, movement})=> {
+export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSaved, onGoBack, rider, movement})=> {
     const {
-        refineCore: { formLoading },
-        saveButtonProps,
+        refineCore: { onFinish, formLoading },
+        //saveButtonProps,
         register,
+        handleSubmit,
         formState: { errors,  },
-        reset,
-    } = useForm();
+        reset
+    } = useForm({refineCoreProps: {
+        onMutationSuccess: () => {
+            onScoreSaved();
+        },
+        onMutationError: () => {
+            console.log(errors);
+        },
+    }});
 
     const customButtonProps = {
-        ...saveButtonProps
+        onClick: handleSubmit(onFinish),
+        disabled: false
     };
  
     const footerButtons = <></>;
-
-    //console.log("movement", movement)
 
     useEffect(() => {
         const defaultValues = {
@@ -90,13 +100,13 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
     });
 
     const recordScore = () => {
-        saveButtonProps.onClick();
-        if (!errors.any)
-            onScoreSaved();  
+        
+        const retVal = customButtonProps.onClick();
+
     }
 
-    const goBack = () => {
-  
+    const movePrevRecord = () => {
+        onGoBack();
     }
         
     return (
@@ -105,14 +115,16 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
 <Create resource="score_test" breadcrumb={<></>} title={movement?.is_collective 
                 ? `Enter Collective for ${rider.riderDetails}` 
                 : `Enter Score for ${rider.riderDetails}` } 
-                isLoading={formLoading} saveButtonProps={saveButtonProps} 
-                footerButtons={footerButtons} footerButtonProps={{}}>
+                isLoading={formLoading}
+                footerButtons={footerButtons} footerButtonProps={{}}
+                goBack={<IconArrowLeft onClick={movePrevRecord} /> }
+                saveButtonProps={customButtonProps}>
 
                 <Flex
 
                 align="center"
                 wrap={{ base: "wrap", md: "wrap" }}
-                bg="green"
+                bg={movement?.is_collective ? "#C68071" : "#70B74D"}
                 mr={{ md: "5" }}
                 color="white"
                 justifyContent={{ base: "center", md: "center" }}
@@ -200,21 +212,8 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
               mb={2}
             >
                 <Stack direction='row' spacing={4} align='center'>          
-                    <Button
-                        p="8"
-                        px="50px"
-                        colorScheme='green'
-                        borderRadius="10px"
-                        mt="8"
-                        fontWeight="bold"
-                        color="white"
-                        fontSize="xl"
-                        onClick={goBack}
-                        >
-                        Go Back
-                    </Button>
                     <Spacer />
-                    <SaveButton {...saveButtonProps}
+                    <SaveButton {...customButtonProps}
                         p="8"
                         px="50px"
                         colorScheme='green'

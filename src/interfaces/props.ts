@@ -21,6 +21,18 @@ export interface IJudgingSession {
     competition_name: string
   };*/
 
+export interface IRiderTestView {
+  id: number,
+  status: number,
+  total_score: number,
+  test_error: string,
+  back_num: number,
+  notes: string,
+  class_test_id: number,
+  comp_class_id: number,
+  rider_details: string
+}
+
 export interface IMovementList {
     class_test_id: number;
     movement_id: number;
@@ -50,6 +62,7 @@ export interface IJudgingScoringComponentProps extends IResourceComponentsProps 
   movement: IMovementList
   rider: IRider
   onScoreSaved: () => void
+  onGoBack: () => void
 };
 
 interface xIJudgingScoringComponentProps extends IJudgingComponentProps {

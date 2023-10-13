@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import {useState, useEffect} from 'react';
 import { EnterScore } from "../../components/enterscore";
+import { TallyScore } from "../../components/tallyscore";
 import { IMovementList} from "../../interfaces/props";
 import { useList, HttpError } from "@refinedev/core";
 import { useDocumentTitle } from "@refinedev/react-router-v6";
@@ -23,6 +24,8 @@ import { useParams } from "react-router-dom";
 import {NavLinks} from '../../components/navlinks';
 import { useForm } from "@refinedev/react-hook-form";
 import { Create, SaveButton} from "@refinedev/chakra-ui";
+import { useNavigate } from "react-router-dom";
+import { IconArrowRight } from "@tabler/icons";
 
 
 export const ScoreTest: React.FC<IResourceComponentsProps> = () => {                                     
@@ -57,6 +60,7 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     const [activeRiderTestId, setActiveRiderTestId] = useState(0);
     const [activeRiderDetails, setActiveRiderDetails] = useState('new rider')
     const [id, setId] = useState(1);
+    const [scoringDone, setScoringDone] = useState(false);
 
     useEffect(() => {
         const activeCompId = (localStorage.getItem("compId"));
@@ -98,31 +102,38 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
 
     const { data, isLoading, isError } = useOne<IMovementList, HttpError>({
         resource: "movementclasstests_view",
-        id,
-        meta: {
-            filter: {
-                field: "class_test_id",
-                operator: "eq",
-                value: activeClassTestId
-            },
-        }
+        id: id ?? ""
     });
 
     const activeRecord = data?.data;
+
+    const navigate = useNavigate();
    
-    //todo - check if any movements have already been judged
+    //todo - check if any movements have already been judged (status == 0, judging is not finished)
+    // status == 1 edit only (use edit page not create)
 
     const handleNextMovement = () => { 
         if (data?.data && data?.data.total_movements > id)
             setId(id + 1);
+        else
+        {
+            //todo tally scores, update status to 1 (judged)
+            //for now, go back to rider page
+            console.log('goto tally page');
+            handleScoringDone();
+        }
+
     }
 
     const handleScoringDone = () => {
-
+        console.log(activeClassTestId)
+        //navigate(`judging/pickrider/${activeClassTestId}`);
+        setScoringDone(true);
     }
 
-    const goBack = () => {
-  
+    const movePrevious = () => {
+        if (data?.data && data?.data.total_movements - 1 > 0)
+            setId(id - 1);
     }
 
     return (
@@ -135,14 +146,25 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
                 classTest: activeClassTest
             }} 
             show={true} />
-
+        <Box
+            width='90%'
+            m="0 auto"
+            display="none"
+            justifyContent="flex-end"
+            >
+            <Spacer />
+            <IconArrowRight onClick={handleNextMovement} /> 
+        </Box>
         <Box maxW="2xl" m="0 auto">
             {isLoading ? (
                 <>Loading...</>
             ) : isError ? (
                 <>Error Loading....</>
             ) : 
-                <EnterScore  onScoreSaved={handleNextMovement} movement={activeRecord ?? dummyRecord} rider={{riderTestId: activeRiderTestId, riderDetails: activeRiderDetails}} />
+                scoringDone ? 
+                <TallyScore />
+                :
+                <EnterScore  onScoreSaved={handleNextMovement} onGoBack={movePrevious} movement={activeRecord ?? dummyRecord} rider={{riderTestId: activeRiderTestId, riderDetails: activeRiderDetails}} />
             
                 }
 

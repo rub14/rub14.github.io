@@ -117,7 +117,7 @@ export const PickRider: React.FC<IResourceComponentsProps> = () => {
                 m="0 auto"
                 mt="8"
                 placeholder='Select Rider'
-                defaultValue={activeRiderTestId}
+                value={activeRiderTestId}
                 onChange={handleSelectRider}>
                 {riderOptions?.map(option => (
                             <option key={option.value} value={option.value}>
