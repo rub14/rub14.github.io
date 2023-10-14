@@ -1,6 +1,190 @@
-import { IResourceComponentsProps } from "@refinedev/core";
-import { ChakraUICreateInferencer } from "@refinedev/inferencer/chakra-ui";
+import { IResourceComponentsProps, useSelect } from "@refinedev/core";
+import { Create } from "@refinedev/chakra-ui";
+import {
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Select,
+    Input,
+    Checkbox,
+} from "@chakra-ui/react";
+import { useForm } from "@refinedev/react-hook-form";
 
 export const MovementCreate: React.FC<IResourceComponentsProps> = () => {
-  return <ChakraUICreateInferencer />;
+    const {
+        refineCore: { formLoading },
+        saveButtonProps,
+        register,
+        formState: { errors },
+    } = useForm();
+
+    const { options: testOptions } = useSelect({
+        resource: "tests",
+        optionLabel: "name",
+    });
+
+    const { options: scoreRangeOptions } = useSelect({
+        resource: "score_range",
+    });
+
+    return (
+        <Create isLoading={formLoading} saveButtonProps={saveButtonProps}>
+            <FormControl mb="3" isInvalid={!!errors?.test_id}>
+                <FormLabel>Test</FormLabel>
+                <Select
+                    placeholder="Select test"
+                    {...register("test_id", {
+                        required: "This field is required",
+                    })}
+                >
+                    {testOptions?.map((option) => (
+                        <option value={option.value} key={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </Select>
+                <FormErrorMessage>
+                    {(errors as any)?.test_id?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!(errors as any)?.item_num}>
+                <FormLabel>Item Num</FormLabel>
+                <Input
+                    type="number"
+                    {...register("item_num", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.item_num?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!(errors as any)?.description}>
+                <FormLabel>Description</FormLabel>
+                <Input
+                    type="text"
+                    {...register("description", {
+                        required: "This field is required",
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.description?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!(errors as any)?.directive}>
+                <FormLabel>Directive</FormLabel>
+                <Input
+                    type="text"
+                    {...register("directive", {
+                        required: "This field is required",
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.directive?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!(errors as any)?.coefficient}>
+                <FormLabel>Coefficient</FormLabel>
+                <Input
+                    type="number"
+                    {...register("coefficient", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.coefficient?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!errors?.is_collective}>
+                <FormLabel>Is Collective</FormLabel>
+                <Checkbox
+                    {...register("is_collective", {
+                        required: "This field is required",
+                    })}
+                />
+                <FormErrorMessage>
+                    {errors?.is_collective?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            {/* 
+                    DatePicker component is not included in "@refinedev/chakra-ui" package.
+                    To use a <DatePicker> component, you can examine the following links:
+                    
+                    - https://github.com/aboveyunhai/chakra-dayzed-datepicker
+                    - https://github.com/wojtekmaj/react-date-picker
+                */}
+            <FormControl mb="3" isInvalid={!!(errors as any)?.created_at}>
+                <FormLabel>Created At</FormLabel>
+                <Input
+                    {...register("created_at", {
+                        required: "This field is required",
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.created_at?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!errors?.active}>
+                <FormLabel>Active</FormLabel>
+                <Checkbox
+                    {...register("active", {
+                        required: "This field is required",
+                    })}
+                />
+                <FormErrorMessage>
+                    {errors?.active?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!(errors as any)?.max_value}>
+                <FormLabel>Max Value</FormLabel>
+                <Input
+                    type="number"
+                    {...register("max_value", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.max_value?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl
+                mb="3"
+                isInvalid={!!(errors as any)?.allowed_increments}
+            >
+                <FormLabel>Allowed Increments</FormLabel>
+                <Input
+                    type="number"
+                    {...register("allowed_increments", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.allowed_increments?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl mb="3" isInvalid={!!errors?.score_range_id}>
+                <FormLabel>Score Range</FormLabel>
+                <Select
+                    placeholder="Select score_range"
+                    {...register("score_range_id", {
+                        required: "This field is required",
+                    })}
+                >
+                    {scoreRangeOptions?.map((option) => (
+                        <option value={option.value} key={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </Select>
+                <FormErrorMessage>
+                    {(errors as any)?.score_range_id?.message as string}
+                </FormErrorMessage>
+            </FormControl>
+        </Create>
+    );
 };
+

@@ -10,7 +10,7 @@ import {
 } from "@refinedev/chakra-ui";
 import { Heading, HStack } from "@chakra-ui/react";
 
-export const MovementClassTestShow: React.FC<
+export const ClassTestViewShow: React.FC<
     IResourceComponentsProps
 > = () => {
     const { queryResult } = useShow();

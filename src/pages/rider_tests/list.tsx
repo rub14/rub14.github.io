@@ -101,6 +101,7 @@ export const RiderTestList: React.FC<IResourceComponentsProps> = () => {
                                 recordItemId={getValue() as string}
                             />
                             <DeleteButton
+                                display="none"
                                 hideText
                                 recordItemId={getValue() as string}
                             />

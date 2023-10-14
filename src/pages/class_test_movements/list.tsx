@@ -28,10 +28,9 @@ import {
 } from "@chakra-ui/react";
 import { IconChevronRight, IconChevronLeft } from "@tabler/icons";
 
-export const MovementClassTestList: React.FC<
+export const ClassTestViewList: React.FC<
     IResourceComponentsProps
 > = () => {
-
     const classTestId = localStorage.getItem("classTestId") ?? ""
     const columns = React.useMemo<ColumnDef<any>[]>(
         () => [
@@ -118,18 +117,16 @@ export const MovementClassTestList: React.FC<
         getHeaderGroups,
         getRowModel,
         setOptions,
-        
         refineCore: {
             setCurrent,
             pageCount,
             current,
-            
             setFilters,
             tableQueryResult: { data: tableData},
         },
     } = useTable({
         columns,
-        refineCoreProps: {
+        refineCoreProps: { 
           filters: {
               mode: "server",
               permanent: [

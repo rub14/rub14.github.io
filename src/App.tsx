@@ -54,10 +54,10 @@ import {
 import { supabaseClient } from "./utility";
 import { Judging, PickRider, ScoreTest } from "./pages/judging";
 import {
-  MovementClassTestList,
-  MovementClassTestShow,
-} from "./pages/movementclasstests";
-import { IconPencil } from "@tabler/icons";
+  ClassTestViewList,
+  ClassTestViewShow,
+} from "./pages/class_test_movements";
+import { IconPencil, IconClipboardText } from "@tabler/icons";
 import { Title } from "./components/title";
 
 function App() {
@@ -81,11 +81,13 @@ function App() {
                 create: "/judging/scoretest/:id"
               },
               {
-                name: "activecompclasstest_view",
-                identifier: "active_comp_class_test_movements",
-                list: "/movementclasstests",
-                show: "/movementclasstests/show/:id",
-               
+                name: "class_test_view",
+                icon: <IconClipboardText />,
+                list: "/class_test_movements",
+                show: "/class_test_movements/show/:id",
+                meta: {
+                  label: "Class Test Movements"
+                },
               },
               {
                 name: "tests",
@@ -94,7 +96,7 @@ function App() {
                 edit: "/tests/edit/:id",
                 show: "/tests/show/:id",
                 meta: {
-                  canDelete: true,
+                //  canDelete: true,
                 },
               },
               {
@@ -104,7 +106,7 @@ function App() {
                 edit: "/movements/edit/:id",
                 show: "/movements/show/:id",
                 meta: {
-                  canDelete: true,
+                  canDelete: false,
                 },
               },
               {
@@ -114,7 +116,7 @@ function App() {
                 edit: "/comp_classes/edit/:id",
                 show: "/comp_classes/show/:id",
                 meta: {
-                  canDelete: true,
+                  canDelete: false,
                 },
               },
               {
@@ -124,7 +126,7 @@ function App() {
                 edit: "/class_tests/edit/:id",
                 show: "/class_tests/show/:id",
                 meta: {
-                  canDelete: true,
+                  canDelete: false,
                 },
               },
               {
@@ -134,7 +136,7 @@ function App() {
                 edit: "/rider_tests/edit/:id",
                 show: "/rider_tests/show/:id",
                 meta: {
-                  canDelete: true,
+                  canDelete: false,
                 },
               },
             ]}
@@ -164,9 +166,9 @@ function App() {
                   <Route path="scoretest/:riderTestId" element={<ScoreTest/>} />
               
                 </Route>
-                <Route path="/movementclasstests">
-                  <Route index element={<MovementClassTestList />} />
-                  <Route path="show/:id" element={<MovementClassTestShow/>} />
+                <Route path="/class_test_movements">
+                  <Route index element={<ClassTestViewList />} />
+                  <Route path="show/:id" element={<ClassTestViewShow/>} />
               
                 </Route>
                 <Route path="/tests">
