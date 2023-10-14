@@ -81,7 +81,7 @@ function App() {
                 create: "/judging/scoretest/:id"
               },
               {
-                name: "movementclasstests_view",
+                name: "activecompclasstest_view",
                 identifier: "active_comp_class_test_movements",
                 list: "/movementclasstests",
                 show: "/movementclasstests/show/:id",
