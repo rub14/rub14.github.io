@@ -54,7 +54,7 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
 
     useEffect(() => {
         const defaultValues = {
-            movement_id: movement?.movement_id,
+            movement_id: movement?.id,
             score: null,
             comment: null,
             };
@@ -130,7 +130,7 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
                 justifyContent={{ base: "center", md: "center" }}
                 >
                 <Box display="block" border="1px" padding="1rem" height="100%" width="100%">
-                    <h2>Movement #: {movement?.id} of {movement?.total_movements}</h2>
+                    <h2>Movement #: {movement?.item_num} of {movement?.total_movements}</h2>
                     <Text>
                         {movement?.description}    
                     </Text>
@@ -194,7 +194,7 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
                 <Input
                     type="number"
                     display="none"
-                    defaultValue={movement?.movement_id}
+                    defaultValue={movement?.id}
                     {...register("movement_id", {
                         required: "This field is required",
                         valueAsNumber: true,

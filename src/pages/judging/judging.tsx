@@ -150,16 +150,16 @@ export const Judging: React.FC<IResourceComponentsProps> = () => {
 
   const clearActiveClassTest = () => {
     setClassTestId(0);
-    //localStorage.setItem("classTestId", '');
-    //localStorage.setItem("classTest", '');
+    localStorage.setItem("classTestId", '');
+    localStorage.setItem("classTest", '');
   }
 
   const clearActiveClassType = () => {
     clearActiveClassTest();
     setClassTypeId(0);
     setClassType('');
-    //localStorage.setItem("classTypeId", '');
-    //localStorage.setItem("classType", '');
+    localStorage.setItem("classTypeId", '');
+    localStorage.setItem("classType", '');
     
   }
 
@@ -167,8 +167,8 @@ export const Judging: React.FC<IResourceComponentsProps> = () => {
     clearActiveClassType();
     setCompId(0);
     setComp('');
-   //localStorage.setItem("compId", '');
-    //localStorage.setItem("comp", '');
+    localStorage.setItem("compId", '');
+    localStorage.setItem("comp", '');
     
   }
 

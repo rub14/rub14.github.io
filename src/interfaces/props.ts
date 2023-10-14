@@ -35,8 +35,8 @@ export interface IRiderTestView {
 
 export interface IMovementList {
     class_test_id: number;
-    movement_id: number;
-    id: number; // item_num
+    id: number; //movement_id
+    item_num: number;
     is_collective: boolean;
     description: string;
     directive: string;
