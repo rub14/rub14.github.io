@@ -14,14 +14,12 @@ import { useParams } from "react-router-dom";
 import {NavLinks} from '../../components/navlinks';
 import { useNavigate } from "react-router-dom";
 import { IconArrowRight } from "@tabler/icons";
-import { useResource } from "@refinedev/core";
 
 
 export const ScoreTest: React.FC<IResourceComponentsProps> = () => {                                     
     useDocumentTitle("Score Test | Scoring");
 
-    const { classTestId} = useParams();
-    const { resource } = useResource("class_test_view" )
+    const {classTestId} = useParams();
  
     const footerButtons = <></>;
 
@@ -50,6 +48,7 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     const [activeClassTest, setActiveClassTest] = useState('');
     const [activeRiderTestId, setActiveRiderTestId] = useState(0);
     const [activeRiderDetails, setActiveRiderDetails] = useState('new rider');
+    const [activeMovementNum, setActiveMovementNum] = useState(0);
     const [movementList, setMovementList] = useState(emptyMovementList);
     const [id, setId] = useState(0);
     const [scoringDone, setScoringDone] = useState(false);
@@ -58,8 +57,7 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
         const activeCompId = (localStorage.getItem("compId"));
         const activeClassId = ( localStorage.getItem("classTypeId"));
         const activeClassTestId = ( localStorage.getItem("classTestId"));
-
-
+        
       if (activeCompId && activeClassId && activeClassTestId)
       {
         setActiveCompId(parseInt(activeCompId));
@@ -71,13 +69,16 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
         setActiveClassTest( localStorage.getItem("classTest") ?? '');
         setActiveRiderTestId( parseInt(localStorage.getItem("riderTestId") ?? '0'));
         setActiveRiderDetails( localStorage.getItem("riderDetails") ?? '');
+
+        setActiveMovementNum (parseInt(localStorage.getItem("movementNum") ?? '0'));
+
       }
 
     }, []);
 
     const { data: movementListData, isLoading: isListLoading, isError: isListError }
          = useList<IMovementList, HttpError>({
-        resource: "class_test_view",
+        resource: "classtestmovements_view",
         sorters: [
             {
                 field: "item_num",
@@ -90,6 +91,11 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
                 operator: "eq",
                 value: activeClassTestId
             },
+            {
+                field: "item_num",
+                operator: "gte",
+                value: Number.isNaN(activeMovementNum) ? 0 : activeMovementNum
+            },
         ],
     });
 
@@ -100,7 +106,7 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
 
     }, [movementListData]);
     const { data, isLoading, isError } = useOne<IMovementList, HttpError>({
-        resource: "class_test_view",
+        resource: "classtestmovements_view",
         id: id ?? ""
     });
 
@@ -112,16 +118,17 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     // status == 1 edit only (use edit page not create)
 
     const handleNextMovement = () => { 
-        if (data?.data && data?.data.total_movements > data?.data.item_num)
+        const index = movementList.findIndex((w) => w.id == data?.data.id)
+        if (index != -1 && movementList.length - 1 > index)
         {
-            const index = movementList.findIndex((w) => w.id == data?.data.id)
-            if (index > -1)
-                setId(movementList[index + 1].id);
-
+            setId(movementList[index + 1].id);
+            localStorage.setItem("movementNum", movementList[index + 1].item_num.toString())
         }
         else 
+        {
             handleScoringDone();
-
+            localStorage.setItem("movementNum", '');
+        }
     }
 
     const handleScoringDone = () => {

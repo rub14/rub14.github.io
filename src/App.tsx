@@ -81,7 +81,7 @@ function App() {
                 create: "/judging/scoretest/:id"
               },
               {
-                name: "class_test_view",
+                name: "classtestmovements_view",
                 icon: <IconClipboardText />,
                 list: "/class_test_movements",
                 show: "/class_test_movements/show/:id",
