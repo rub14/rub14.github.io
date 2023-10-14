@@ -53,6 +53,10 @@ import {
 } from "./pages/rider_tests";
 import { supabaseClient } from "./utility";
 import { Judging, PickRider, ScoreTest } from "./pages/judging";
+import {
+  MovementClassTestList,
+  MovementClassTestShow,
+} from "./pages/movementclasstests";
 import { IconPencil } from "@tabler/icons";
 import { Title } from "./components/title";
 
@@ -75,6 +79,13 @@ function App() {
                 identifier: "score_test",
                 icon: <IconPencil />,
                 create: "/judging/scoretest/:id"
+              },
+              {
+                name: "movementclasstests_view",
+                identifier: "active_comp_class_test_movements",
+                list: "/movementclasstests",
+                show: "/movementclasstests/show/:id",
+               
               },
               {
                 name: "tests",
@@ -149,8 +160,13 @@ function App() {
                 />
                 <Route path="/judging">
                   <Route index element={<Judging />} />
-                  <Route path="pickrider/:id" element={<PickRider/>} />
-                  <Route path="scoretest/:id" element={<ScoreTest/>} />
+                  <Route path="pickrider/:classTestId" element={<PickRider/>} />
+                  <Route path="scoretest/:riderTestId" element={<ScoreTest/>} />
+              
+                </Route>
+                <Route path="/movementclasstests">
+                  <Route index element={<MovementClassTestList />} />
+                  <Route path="show/:id" element={<MovementClassTestShow/>} />
               
                 </Route>
                 <Route path="/tests">

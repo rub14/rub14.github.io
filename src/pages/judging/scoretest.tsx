@@ -1,18 +1,7 @@
 import { useSelect, IResourceComponentsProps, useOne, Option } from "@refinedev/core";
-import { 
-    Heading, 
-    FormControl, 
-    FormLabel,
-    FormErrorMessage, 
-    Text, 
-    Textarea,
-    Select, 
-    Input,
+import {  
     Box, 
-    Button, 
-    Stack, 
-    Spacer,
-    Flex 
+    Spacer
 } from "@chakra-ui/react";
 import {useState, useEffect} from 'react';
 import { EnterScore } from "../../components/enterscore";
@@ -22,8 +11,6 @@ import { useList, HttpError } from "@refinedev/core";
 import { useDocumentTitle } from "@refinedev/react-router-v6";
 import { useParams } from "react-router-dom";
 import {NavLinks} from '../../components/navlinks';
-import { useForm } from "@refinedev/react-hook-form";
-import { Create, SaveButton} from "@refinedev/chakra-ui";
 import { useNavigate } from "react-router-dom";
 import { IconArrowRight } from "@tabler/icons";
 
@@ -31,7 +18,7 @@ import { IconArrowRight } from "@tabler/icons";
 export const ScoreTest: React.FC<IResourceComponentsProps> = () => {                                     
     useDocumentTitle("Score Test | Scoring");
 
-    //const { id } = useParams();
+    //const { riderTestId} = useParams();
  
     const footerButtons = <></>;
 
@@ -102,7 +89,10 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
 
     const { data, isLoading, isError } = useOne<IMovementList, HttpError>({
         resource: "movementclasstests_view",
-        id: id ?? ""
+        id: id ?? "",
+        meta: {
+            variables: { class_test_id: activeClassTestId},
+        }
     });
 
     const activeRecord = data?.data;
@@ -115,19 +105,14 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     const handleNextMovement = () => { 
         if (data?.data && data?.data.total_movements > id)
             setId(id + 1);
-        else
-        {
-            //todo tally scores, update status to 1 (judged)
-            //for now, go back to rider page
-            console.log('goto tally page');
+        else 
             handleScoringDone();
-        }
 
     }
 
     const handleScoringDone = () => {
-        console.log(activeClassTestId)
-        //navigate(`judging/pickrider/${activeClassTestId}`);
+        //todo tally scores, update status to 1 (judged)
+        const movementTotal = 
         setScoringDone(true);
     }
 

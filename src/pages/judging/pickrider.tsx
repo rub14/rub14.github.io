@@ -1,4 +1,4 @@
-import { useSelect, IResourceComponentsProps, useList, HttpError } from "@refinedev/core";
+import { useSelect, IResourceComponentsProps, useList, useShow, HttpError } from "@refinedev/core";
 import { Heading, Text, Select, Box, Button, Stack, Spacer } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
@@ -9,7 +9,7 @@ import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 export const PickRider: React.FC<IResourceComponentsProps> = () => {
     useDocumentTitle("Pick Rider | Scoring");
-    const { id } = useParams();
+    const { classTestId } = useParams();
     const [activeRiderTestId, setActiveRiderTestId] = useState(0);
     const [activeRiderDetails, setActiveRiderDetails] = useState('');
     const [activeComp, setActiveComp] = useState('');
@@ -44,7 +44,7 @@ export const PickRider: React.FC<IResourceComponentsProps> = () => {
         {
             field: "class_test_id",
             operator: "eq",
-            value: id
+            value: classTestId
         },   
       ]
 
@@ -91,7 +91,7 @@ export const PickRider: React.FC<IResourceComponentsProps> = () => {
     }
 
     const handleNext = () => {
-      navigate(`/judging/scoretest/${activeRiderTestId}`)
+      navigate(`/judging/scoretest/${classTestId}`)
 
     }
 
