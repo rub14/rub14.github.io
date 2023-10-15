@@ -63,7 +63,7 @@ export const EnterScore: React.FC<IJudgingScoringComponentProps> = ({onScoreSave
 
     //this was using radio buttons - had to take it out for now as
     // it was getting complicated
-    const [displayScoreSelect, setdisplayScoreSelect] = useState(true);
+    //const [displayScoreSelect, setdisplayScoreSelect] = useState(true);
     
     // const toast = useToast();
     // const inputScoreRef = useRef();

@@ -119,8 +119,6 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     // status == 1 edit only (use edit page not create)
 
     const handleNextMovement = () => { 
-        console.log('index', movementList.findIndex((w) => w.id == data?.data.id));
-        console.log('length', movementList.length);
         const index = movementList.findIndex((w) => w.id == data?.data.id)
         if (index != -1 && movementList.length - 1 > index)
         {
@@ -170,7 +168,7 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
         <Box
             width='90%'
             m="0 auto"
-            display="none"
+            display="flex"
             justifyContent="flex-end"
             >
             <Spacer />

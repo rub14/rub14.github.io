@@ -1,14 +1,29 @@
-import { IResourceComponentsProps, useOne, HttpError } from "@refinedev/core";
-import { NumberField, TagField, DateField } from "@refinedev/chakra-ui";
-import { Box, Button, Spacer, Heading, HStack, Text } from "@chakra-ui/react";
-import { IRiderTestView } from "../../interfaces/props";
+import { IResourceComponentsProps, useOne, useSelect, HttpError } from "@refinedev/core";
+import { NumberField, TagField, DateField, Edit } from "@refinedev/chakra-ui";
+import { 
+    Box, 
+    Button, 
+    Spacer, 
+    Heading, 
+    Text,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Select,
+    Input,
+    Checkbox,
+    Textarea, } from "@chakra-ui/react";
+import { IRiderTallyView } from "../../interfaces/props";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "@refinedev/react-hook-form";
+import React from "react";
 
 export const TallyScore: React.FC<IResourceComponentsProps> = () => {
 
-    const { data, isLoading, isError } = useOne<IRiderTestView, HttpError>({
+    const { data, isLoading, isError } = useOne<IRiderTallyView, HttpError>({
         resource: "tally_view",
-        id: localStorage.getItem("riderTestId") ?? ""
+        id: localStorage.getItem("riderTestId") ?? "",
+        
     });
 
     const record = data?.data;
@@ -22,9 +37,76 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
     });*/
 
     const navigate = useNavigate();
+
+    const {
+        refineCore: { onFinish, formLoading },
+        //saveButtonProps,
+        register,
+        handleSubmit,
+        formState: { errors,  },
+        setValue,
+        reset
+    } = useForm({refineCoreProps: {
+        resource: "rider_tests",
+        onMutationSuccess: () => {
+            const activeClassTestId = localStorage.getItem("classTestId") ?? ""
+            //navigate(`../../judging/pickrider/${activeClassTestId}`);
+        },
+        onMutationError: () => {
+            console.log(errors);
+        },
+    }});
+
+    const footerButtons = <></>;
+
+    const customButtonProps = {
+        onClick: handleSubmit(onFinish),
+        disabled: false
+    };    
+
+    /*const { options: testErrorOptions } = useSelect({
+        resource: "test_errors",
+        defaultValue: data?.data.test_error,
+        optionLabel: "description",
+        optionValue: "error_code",
+        sorters: [
+            {
+                field: "error_code",
+                order: "asc",
+            },
+        ],
+        });
+
+        React.useEffect(() => {
+            setValue("test_error", data?.data.test_error ?? '');
+        }, [testErrorOptions]);*/
+
+        React.useEffect(() => {
+            setValue("id", data?.data.id ?? 0);
+        }, [data]);
+
+        React.useEffect(() => {
+            setValue("movement_totals", data?.data.movement_totals ?? 0);
+        }, [data]);
+
+        React.useEffect(() => {
+            setValue("collective_totals", data?.data.collective_totals ?? 0);
+        }, [data]);
+
+        React.useEffect(() => {
+            setValue("deductions", data?.data.deductions) ?? 0;
+        }, [data]);
+
+        React.useEffect(() => {
+            setValue("total_score", data?.data.total_score) ?? 0;
+        }, [data]);
+
+        React.useEffect(() => {
+            setValue("status", data?.data.status ?? 0);
+        }, [data]);
+
     const exitScoring = () => {
-        const activeClassTestId = localStorage.getItem("classTestId") ?? ""
-        navigate(`../../judging/pickrider/${activeClassTestId}`);
+        //save form
     }
 
     return (
@@ -35,7 +117,7 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
             {isLoading ? (
                 <>Loading...</>
             ) : (
-                <>{record?.rider_details}</>
+                <>Back Num: {record?.back_num} Rider: {record?.rider_name}</>
             )}  
             <Heading as="h5" size="sm" mt={4}>
                 Total Movements Score
@@ -61,6 +143,125 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
                 Percentage
             </Heading>
             <Text>{record?.total_score / record?.max_score * 100 ?? ""} </Text>
+            
+            <Edit isLoading={formLoading} saveButtonProps={customButtonProps}
+                footerButtons={footerButtons} footerButtonProps={{}}
+                breadcrumb={<></>} title={"Errors and Deductions"}
+                goBack={<></>}>
+                <FormControl mb="3" isInvalid={!!(errors as any)?.id}>
+                    <FormLabel>Id</FormLabel>
+                    <Input
+                        disabled
+                        type="number"
+                        {...register("id", {
+                            required: "This field is required",
+                            valueAsNumber: true,
+                        })}
+                    />
+                    <FormErrorMessage>
+                        {(errors as any)?.id?.message as string}
+                    </FormErrorMessage>
+                </FormControl>
+                <FormControl mb="3" isInvalid={!!(errors as any)?.status}>
+                    <FormLabel>Confirm Judging</FormLabel>
+                    <Input
+                        disabled
+                        type="number"
+                        {...register("status", {
+                            required: "This field is required",
+                            valueAsNumber: true,
+                        })}
+                    />
+                    <FormErrorMessage>
+                        {(errors as any)?.status?.message as string}
+                    </FormErrorMessage>
+                </FormControl>
+                <FormControl mb="3" isInvalid={!!errors?.class_test_id}>
+                    <FormLabel>Errors</FormLabel>
+                    <Select
+                        placeholder="Select errors if any"
+                        {...register("test_error")}
+                    >
+                        {/*testErrorOptions?.map((option) => (
+                            <option value={option.value} key={option.value}>
+                                {option.label}
+                            </option>
+                        ))*/}
+                    </Select>
+                </FormControl>
+                <FormControl mb="3" isInvalid={!!errors?.is_disqualified}>
+                    <FormLabel>Disqualified</FormLabel>
+                    <Checkbox
+                        {...register("is_disqualified", {
+                            required: "This field is required",
+                        })}
+                    />
+                    <FormErrorMessage>
+                        {errors?.is_disqualified?.message as string}
+                    </FormErrorMessage>
+                </FormControl>
+                <FormControl mb="3" isInvalid={!!errors?.is_eliminated}>
+                    <FormLabel>Eliminated</FormLabel>
+                    <Checkbox
+                        {...register("is_eliminated", {
+                            required: "This field is required",
+                        })}
+                    />
+                    <FormErrorMessage>
+                        {errors?.is_eliminated?.message as string}
+                    </FormErrorMessage>
+                </FormControl>
+                <FormControl mb="3" isInvalid={!!errors?.reason}>
+                    <FormLabel>Explain errors/disqualification/elimination</FormLabel>
+                    <Textarea
+                        type="text"
+                        {...register("reason")}
+                    />
+                </FormControl>
+                <FormControl mb="3" isInvalid={!!(errors as any)?.deductions}>
+                <FormLabel>Deductions</FormLabel>
+                <Input
+                    type="number"
+                    {...register("deductions", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+                <FormErrorMessage>
+                    {(errors as any)?.max_value?.deductions as string}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl>
+                <Input
+                    type="number" 
+                    display="none" 
+                    {...register("movement_totals", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+            </FormControl>
+            <FormControl>
+                <Input
+                    type="number" 
+                    display="none" 
+                    {...register("collective_totals", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+            </FormControl>
+            <FormControl>
+                <Input
+                    type="number" 
+                    display="none" 
+                    {...register("total_score", {
+                        required: "This field is required",
+                        valueAsNumber: true,
+                    })}
+                />
+            </FormControl>
+            </Edit>
             <Box
               width='90%'
               m="0 auto"

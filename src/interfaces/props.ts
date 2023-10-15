@@ -21,16 +21,23 @@ export interface IJudgingSession {
     competition_name: string
   };*/
 
-export interface IRiderTestView {
+export interface IRiderTallyView {
   id: number,
+  class_test_id: number,
   status: number,
   total_score: number,
   test_error: string,
   back_num: number,
-  notes: string,
-  class_test_id: number,
   comp_class_id: number,
-  rider_details: string
+  rider_name: string,
+  notes: string,
+  phase_name: string,
+  class_types_name: string,
+  competition_name: string,
+  movement_totals: number,
+  collective_totals: number,
+  deductions: number,
+  max_score: number,
 }
 
 export interface IMovementList {
