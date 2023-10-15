@@ -1,13 +1,13 @@
 import { IResourceComponentsProps, useOne, HttpError } from "@refinedev/core";
 import { NumberField, TagField, DateField } from "@refinedev/chakra-ui";
-import { Box, Button, Spacer, Heading, HStack } from "@chakra-ui/react";
+import { Box, Button, Spacer, Heading, HStack, Text } from "@chakra-ui/react";
 import { IRiderTestView } from "../../interfaces/props";
 import { useNavigate } from "react-router-dom";
 
 export const TallyScore: React.FC<IResourceComponentsProps> = () => {
 
     const { data, isLoading, isError } = useOne<IRiderTestView, HttpError>({
-        resource: "riderclasstests_view",
+        resource: "tally_view",
         id: localStorage.getItem("riderTestId") ?? ""
     });
 
@@ -38,9 +38,29 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
                 <>{record?.rider_details}</>
             )}  
             <Heading as="h5" size="sm" mt={4}>
+                Total Movements Score
+            </Heading>
+            <NumberField value={record?.movement_totals ?? ""} />
+            <Heading as="h5" size="sm" mt={4}>
+                Total Collectives Score
+            </Heading>
+            <NumberField value={record?.collective_totals ?? ""} />
+            <Heading as="h5" size="sm" mt={4}>
+                Deductions
+            </Heading>
+            <NumberField value={record?.deductions ?? ""} />
+            <Heading as="h5" size="sm" mt={4}>
                 Total Score
             </Heading>
             <NumberField value={record?.total_score ?? ""} />
+            <Heading as="h5" size="sm" mt={4}>
+                Maximum Marks
+            </Heading>
+            <NumberField value={record?.max_score ?? ""} />
+            <Heading as="h5" size="sm" mt={4}>
+                Percentage
+            </Heading>
+            <Text>{record?.total_score / record?.max_score * 100 ?? ""} </Text>
             <Box
               width='90%'
               m="0 auto"

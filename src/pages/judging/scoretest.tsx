@@ -79,6 +79,7 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     const { data: movementListData, isLoading: isListLoading, isError: isListError }
          = useList<IMovementList, HttpError>({
         resource: "classtestmovements_view",
+        pagination: {mode: "off"},
         sorters: [
             {
                 field: "item_num",
@@ -118,6 +119,8 @@ export const ScoreTest: React.FC<IResourceComponentsProps> = () => {
     // status == 1 edit only (use edit page not create)
 
     const handleNextMovement = () => { 
+        console.log('index', movementList.findIndex((w) => w.id == data?.data.id));
+        console.log('length', movementList.length);
         const index = movementList.findIndex((w) => w.id == data?.data.id)
         if (index != -1 && movementList.length - 1 > index)
         {
