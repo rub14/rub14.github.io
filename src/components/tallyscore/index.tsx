@@ -71,9 +71,8 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
         
     }
 
-    /*const { options: testErrorOptions } = useSelect({
-        resource: "test_errors",
-        defaultValue: data?.data.test_error,
+    const { options: testErrorOptions } = useSelect({
+        resource: "class_test_error_types",
         optionLabel: "description",
         optionValue: "error_code",
         sorters: [
@@ -82,11 +81,18 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
                 order: "asc",
             },
         ],
+        filters: [
+            {
+                field: "class_test_id",
+                operator: "eq",
+                value: localStorage.getItem("classTestId") ?? ""
+            },   
+        ]
         });
 
         React.useEffect(() => {
             setValue("test_error", data?.data.test_error ?? '');
-        }, [testErrorOptions]);*/
+        }, [testErrorOptions]);
 
         React.useEffect(() => {
             setValue("id", data?.data.id ?? 0);
@@ -165,7 +171,7 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
                 saveButtonProps={customButtonProps}
                 footerButtons={footerButtons} footerButtonProps={{}}
                 breadcrumb={<></>} title={"Errors and Deductions"}
-                goBack={<Button disabled={true} display="none" onClick={moveBack}>←</Button>}>
+                goBack={<></>}>
                 <FormControl mb="3" isInvalid={!!(errors as any)?.id}>
                     <Input
                         //disabled
@@ -194,11 +200,11 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
                         placeholder="Select errors if any"
                         {...register("test_error")}
                     >
-                        {/*testErrorOptions?.map((option) => (
+                        {testErrorOptions?.map((option) => (
                             <option value={option.value} key={option.value}>
                                 {option.label}
                             </option>
-                        ))*/}
+                        ))}
                     </Select>
                 </FormControl>
                 <FormControl mb="3" isInvalid={!!errors?.is_disqualified}>
