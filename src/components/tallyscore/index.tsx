@@ -1,4 +1,4 @@
-import { IResourceComponentsProps, useOne, useSelect, HttpError } from "@refinedev/core";
+import { IResourceComponentsProps, useOne, useBack, useSelect, HttpError } from "@refinedev/core";
 import { NumberField, TagField, DateField, Edit } from "@refinedev/chakra-ui";
 import { 
     Box, 
@@ -27,6 +27,7 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
     });
 
     const record = data?.data;
+    const maxScore = data?.data.max_score;
 
     /*const { data: tallyData, isLoading: tallyIsLoading } = useOne({
         resource: "riderclasstests_view",
@@ -45,6 +46,7 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
         handleSubmit,
         formState: { errors,  },
         setValue,
+        getValues,
         reset
     } = useForm({refineCoreProps: {
         resource: "rider_tests",
@@ -63,6 +65,11 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
         onClick: handleSubmit(onFinish),
         disabled: false
     };    
+
+    const moveBack = () => {
+        //todo
+        
+    }
 
     /*const { options: testErrorOptions } = useSelect({
         resource: "test_errors",
@@ -94,19 +101,29 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
         }, [data]);
 
         React.useEffect(() => {
-            setValue("deductions", data?.data.deductions) ?? 0;
+            setValue("deductions", data?.data.deductions ?? 0);
         }, [data]);
 
         React.useEffect(() => {
-            setValue("total_score", data?.data.total_score) ?? 0;
+            setValue("total_score", data?.data.total_score ?? 0);
         }, [data]);
 
         React.useEffect(() => {
-            setValue("status", data?.data.status ?? 0);
+            setValue("status", 1);
         }, [data]);
+
+    const handleAddDeductions = () => {
+        const deductions = getValues("deductions");
+        const totalScore = data?.data.total_score ?? 0;
+       
+        if (!isNaN(parseFloat(deductions)) && totalScore > 0)
+            setValue("total_score",  totalScore - parseFloat(deductions));
+
+    }
 
     const exitScoring = () => {
-        //save form
+        handleAddDeductions();
+        //todo - save form
     }
 
     return (
@@ -142,39 +159,34 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
             <Heading as="h5" size="sm" mt={4}>
                 Percentage
             </Heading>
-            <Text>{record?.total_score / record?.max_score * 100 ?? ""} </Text>
+            <Text>{record?.total_score / record?.max_score * 100 ?? ""} %</Text>
             
-            <Edit isLoading={formLoading} saveButtonProps={customButtonProps}
+            <Edit isLoading={formLoading} headerButtons={<></>} 
+                saveButtonProps={customButtonProps}
                 footerButtons={footerButtons} footerButtonProps={{}}
                 breadcrumb={<></>} title={"Errors and Deductions"}
-                goBack={<></>}>
+                goBack={<Button disabled={true} display="none" onClick={moveBack}>←</Button>}>
                 <FormControl mb="3" isInvalid={!!(errors as any)?.id}>
-                    <FormLabel>Id</FormLabel>
                     <Input
-                        disabled
+                        //disabled
+                        display="none" 
                         type="number"
                         {...register("id", {
                             required: "This field is required",
                             valueAsNumber: true,
                         })}
                     />
-                    <FormErrorMessage>
-                        {(errors as any)?.id?.message as string}
-                    </FormErrorMessage>
                 </FormControl>
                 <FormControl mb="3" isInvalid={!!(errors as any)?.status}>
-                    <FormLabel>Confirm Judging</FormLabel>
                     <Input
-                        disabled
+                        display="none"
                         type="number"
                         {...register("status", {
                             required: "This field is required",
                             valueAsNumber: true,
                         })}
                     />
-                    <FormErrorMessage>
-                        {(errors as any)?.status?.message as string}
-                    </FormErrorMessage>
+
                 </FormControl>
                 <FormControl mb="3" isInvalid={!!errors?.class_test_id}>
                     <FormLabel>Errors</FormLabel>
@@ -212,23 +224,25 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
                     </FormErrorMessage>
                 </FormControl>
                 <FormControl mb="3" isInvalid={!!errors?.reason}>
-                    <FormLabel>Explain errors/disqualification/elimination</FormLabel>
+                    <FormLabel>Explain errors / disqualification / elimination</FormLabel>
                     <Textarea
                         type="text"
                         {...register("reason")}
                     />
                 </FormControl>
                 <FormControl mb="3" isInvalid={!!(errors as any)?.deductions}>
-                <FormLabel>Deductions</FormLabel>
+                <FormLabel>Add Deductions</FormLabel>
                 <Input
                     type="number"
+                    defaultValue="0"
                     {...register("deductions", {
                         required: "This field is required",
                         valueAsNumber: true,
+                        validate: (value: number) => value >= 0
                     })}
                 />
                 <FormErrorMessage>
-                    {(errors as any)?.max_value?.deductions as string}
+                    {(errors as any)?.deductions?.message as string}
                 </FormErrorMessage>
             </FormControl>
             <FormControl>
@@ -254,12 +268,13 @@ export const TallyScore: React.FC<IResourceComponentsProps> = () => {
             <FormControl>
                 <Input
                     type="number" 
-                    display="none" 
+                    display="none"
                     {...register("total_score", {
                         required: "This field is required",
                         valueAsNumber: true,
+                        validate: (value: number) => value <= record?.max_score - deductions?.value,
                     })}
-                />
+                />  
             </FormControl>
             </Edit>
             <Box
